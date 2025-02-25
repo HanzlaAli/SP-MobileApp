@@ -1,0 +1,13 @@
+part of 'add_serviceProvider_specialization_bloc.dart';
+
+abstract class AddServiceProviderSpecializationStateBase {
+  const AddServiceProviderSpecializationStateBase();
+}
+
+class AddServiceProviderSpecializationInitial extends AddServiceProviderSpecializationStateBase {}
+
+class AddServiceProviderSpecializationLoading extends AddServiceProviderSpecializationStateBase {}
+
+class AddServiceProviderSpecializationSuccess extends AddServiceProviderSpecializationStateBase {}
+
+class AddServiceProviderSpecializationError extends AddServiceProviderSpecializationStateBase {}
