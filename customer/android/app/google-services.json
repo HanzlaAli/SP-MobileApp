@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "693536033919",
+    "project_id": "mended-solutions",
+    "storage_bucket": "mended-solutions.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:693536033919:android:85cadeb79847388817834a",
+        "android_client_info": {
+          "package_name": "com.example.customer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQOua-wgdnSfcLLJejWZSmLtkLmW7SHA8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

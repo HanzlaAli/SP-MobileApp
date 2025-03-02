@@ -53,7 +53,7 @@ dependencies:
   image_picker:
   dot_navigation_bar:
   syncfusion_flutter_calendar:
-  agora_rtc_engine:
+  # agora_rtc_engine:
   firebase_pagination:
   permission_handler:
   # agora_uikit:

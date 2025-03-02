@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -44,39 +41,47 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyA2ttuMc-mueXPrxxou1lS3Np0H6vrZHVA',
-    appId: '1:767760875619:web:c4e9db50fa04a80c4db856',
-    messagingSenderId: '767760875619',
-    projectId: 'mendmee-d52b0',
-    authDomain: 'mendmee-d52b0.firebaseapp.com',
-    storageBucket: 'mendmee-d52b0.appspot.com',
+    apiKey: 'AIzaSyBcMx8e_2HG05z3gSVM2YcRHB95EsH8ftk',
+    appId: '1:693536033919:web:f0cfa60ca7d8abd717834a',
+    messagingSenderId: '693536033919',
+    projectId: 'mended-solutions',
+    authDomain: 'mended-solutions.firebaseapp.com',
+    storageBucket: 'mended-solutions.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAVTUHEigrvDFsajlntrMWwHy76BRA7JU0',
-    appId: '1:767760875619:android:8de5a0bc30b88c044db856',
-    messagingSenderId: '767760875619',
-    projectId: 'mendmee-d52b0',
-    storageBucket: 'mendmee-d52b0.appspot.com',
+    apiKey: 'AIzaSyBQOua-wgdnSfcLLJejWZSmLtkLmW7SHA8',
+    appId: '1:693536033919:android:85cadeb79847388817834a',
+    messagingSenderId: '693536033919',
+    projectId: 'mended-solutions',
+    storageBucket: 'mended-solutions.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCbb_9HCpXYW0LMi8Z3BAEEEp7sABtUTSM',
-    appId: '1:767760875619:ios:3c51208aa1d68a404db856',
-    messagingSenderId: '767760875619',
-    projectId: 'mendmee-d52b0',
-    storageBucket: 'mendmee-d52b0.appspot.com',
-    androidClientId: '767760875619-jfe4nskfvi5o8p6cpadl904jnkqch9el.apps.googleusercontent.com',
-    iosBundleId: 'com.mendmee.customer',
+    apiKey: 'AIzaSyAK4CKyLDHyNAZLXqN5-JkDMx8P-H85HV0',
+    appId: '1:693536033919:ios:73e9bd182943e04717834a',
+    messagingSenderId: '693536033919',
+    projectId: 'mended-solutions',
+    storageBucket: 'mended-solutions.firebasestorage.app',
+    iosBundleId: 'com.example.customer',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCbb_9HCpXYW0LMi8Z3BAEEEp7sABtUTSM',
-    appId: '1:767760875619:ios:3c51208aa1d68a404db856',
-    messagingSenderId: '767760875619',
-    projectId: 'mendmee-d52b0',
-    storageBucket: 'mendmee-d52b0.appspot.com',
-    androidClientId: '767760875619-jfe4nskfvi5o8p6cpadl904jnkqch9el.apps.googleusercontent.com',
-    iosBundleId: 'com.mendmee.customer',
+    apiKey: 'AIzaSyAK4CKyLDHyNAZLXqN5-JkDMx8P-H85HV0',
+    appId: '1:693536033919:ios:73e9bd182943e04717834a',
+    messagingSenderId: '693536033919',
+    projectId: 'mended-solutions',
+    storageBucket: 'mended-solutions.firebasestorage.app',
+    iosBundleId: 'com.example.customer',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBcMx8e_2HG05z3gSVM2YcRHB95EsH8ftk',
+    appId: '1:693536033919:web:7d15a8da39f25ac017834a',
+    messagingSenderId: '693536033919',
+    projectId: 'mended-solutions',
+    authDomain: 'mended-solutions.firebaseapp.com',
+    storageBucket: 'mended-solutions.firebasestorage.app',
+  );
+
 }
