@@ -10,7 +10,6 @@ import '../../../../Presentation/Bloc/GetServiceProviderLicenseTypeBloc/get_serv
 import '../../../../Presentation/Screens/AppointmentSchedule/WeekDaysScreen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../Presentation/Widgets/ServiceProviderSpecialities.dart';
 import '../../../../Presentation/Widgets/MyDropdownWithNoLogo.dart';
 import '../../../../Presentation/Widgets/MyTextFieldWithNoLogo.dart';
 import '../../../../Presentation/Widgets/TherapyTypes.dart';
@@ -21,11 +20,8 @@ import '../../../helper/Constants/MyIcons.dart';
 import '../../../helper/Constants/MySpaces.dart';
 import '../../../helper/ReusedFunctions.dart';
 import '../../../../Data/Models/LicenseModels/GetLicenseTypeModel.dart';
-import '../../../Bloc/GetProfileBloc/get_profile_bloc.dart';
 import '../../../Widgets/MyAppBarWidget.dart';
 import '../../../Widgets/MyButton.dart';
-import '../LogIn/LogIn.dart';
-
 class SignUp3 extends StatefulWidget {
   static const routeName = 'signup-3';
   const SignUp3({Key? key}) : super(key: key);
@@ -150,7 +146,6 @@ class _SignUp3State extends State<SignUp3> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           verticalSpacing10,
-                          _specialitiesTextBox(),
                           verticalSpacing10,
                           _therapyServicesTextBox(),
                           verticalSpacing10,
@@ -216,23 +211,23 @@ class _SignUp3State extends State<SignUp3> {
         ),
       );
 
-  Widget _specialitiesTextBox() => Container(
-        width: getWidth(MediaQuery.of(context).size.width),
-        height: 50,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.black12,
-        ),
-        alignment: Alignment.center,
-        child: ListTile(
-          onTap: () => Get.bottomSheet(const ServiceProviderSpecialities()),
-          leading: const Icon(Icons.done_outline_sharp),
-          title: const Text(
-            'Add Specialities',
-          ),
-          trailing: const Icon(Icons.arrow_drop_down_sharp),
-        ),
-      );
+  // Widget _specialitiesTextBox() => Container(
+  //       width: getWidth(MediaQuery.of(context).size.width),
+  //       height: 50,
+  //       decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.circular(10),
+  //         color: Colors.black12,
+  //       ),
+  //       alignment: Alignment.center,
+  //       child: ListTile(
+  //         onTap: () => Get.bottomSheet(const ServiceProviderSpecialities()),
+  //         leading: const Icon(Icons.done_outline_sharp),
+  //         title: const Text(
+  //           'Add Specialities',
+  //         ),
+  //         trailing: const Icon(Icons.arrow_drop_down_sharp),
+  //       ),
+  //     );
 
   //  MyDropDownTextField(
   //       hintText:

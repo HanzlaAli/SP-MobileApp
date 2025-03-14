@@ -1,34 +1,75 @@
+import '../../../Presentation/helper/Constants/Constants.dart';
+
 class CustomerRequestServiceModel {
-  late int id;
-  int? customerId;
   String? title;
-  String? serviceType;
+  ServiceType? serviceType;
   String? description;
   List<String>? images;
   int? budget;
+  User? user;
+  int? id;
 
   CustomerRequestServiceModel(
-      {required this.id,
-      this.customerId,
-      this.title,
+      {this.title,
       this.serviceType,
       this.description,
       this.images,
-      this.budget});
+      this.budget,
+      this.user,
+      this.id});
 
   CustomerRequestServiceModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    customerId = json['customerId'];
     title = json['title'];
-    serviceType = json['serviceType'];
+    serviceType = json['serviceType'] != null
+        ? new ServiceType.fromJson(json['serviceType'])
+        : null;
     description = json['description'];
-    images = _getImages(json['images']);
+    images = _getImages(json['images'].toString());
     budget = json['budget'];
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    id = json['id'];
   }
+}
 
-  List<String> _getImages(String image) {
-    const String baseUrl = 'http://132.148.73.196:81/';
-    var images = image.split(';').map((img) => '$baseUrl$img').toList();
-    return images;
+class ServiceType {
+  String? name;
+  int? id;
+
+  ServiceType({this.name, this.id});
+
+  ServiceType.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    id = json['id'];
   }
+}
+
+class User {
+  String? firstName;
+  String? lastName;
+  String? email;
+  String? phoneNumber;
+  String? profilePicture;
+  int? id;
+
+  User(
+      {this.firstName,
+      this.lastName,
+      this.email,
+      this.phoneNumber,
+      this.profilePicture,
+      this.id});
+
+  User.fromJson(Map<String, dynamic> json) {
+    firstName = json['firstName'];
+    lastName = json['lastName'];
+    email = json['email'];
+    phoneNumber = json['phoneNumber'];
+    profilePicture = baseUrl + json['profilePicture'];
+    id = json['id'];
+  }
+}
+
+List<String> _getImages(String image) {
+  var images = image.split(';').map((img) => '$baseUrl$img').toList();
+  return images;
 }

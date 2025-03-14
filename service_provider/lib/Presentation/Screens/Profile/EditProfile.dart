@@ -176,8 +176,6 @@ class _EditProfileState extends State<EditProfile> {
               verticalSpacing20,
               _therapyServicesTextBox(),
               verticalSpacing20,
-              _specialitiesTextBox(),
-              verticalSpacing20,
               _divider(),
               verticalSpacing10,
               _licenseDetailText(context),
@@ -223,26 +221,6 @@ class _EditProfileState extends State<EditProfile> {
           ),
           title: const Text(
             'Service Type',
-          ),
-          trailing: const Icon(Icons.arrow_drop_down_sharp),
-        ),
-      );
-
-  Widget _specialitiesTextBox() => Container(
-        width: Get.width * 0.8,
-        height: 50,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.black12,
-        ),
-        alignment: Alignment.center,
-        child: ListTile(
-          onTap: () => Get.bottomSheet(EditServiceProviderSpecialities(
-            model: widget.serviceProviderProfileModel.specializations!,
-          )),
-          leading: const Icon(Icons.done_outline_sharp),
-          title: const Text(
-            'Add Specialities',
           ),
           trailing: const Icon(Icons.arrow_drop_down_sharp),
         ),

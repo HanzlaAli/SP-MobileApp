@@ -1,9 +1,7 @@
 // ignore_for_file: file_names, must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../Core/Routes/Routes.dart';
 import '../Bloc/ThemeBloc/theme_bloc.dart';
-import '../Screens/Chat/ChatHead.dart';
 import '../helper/Constants/MyColors.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -30,30 +28,15 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: SafeArea(
             child: Row(
               children: [
-                isDrawer != true
-                    ? SizedBox(
-                        width: 50,
-                        child: IconButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            icon: const Icon(
-                              Icons.arrow_back_ios_rounded,
-                              color: kWhiteColor,
-                            )),
-                      )
-                    :
-                    // !kIsWeb
-                    //     ?
-                    SizedBox(
-                        width: 50,
-                        child: IconButton(
-                            onPressed: () => Scaffold.of(context).openDrawer(),
-                            icon: Image.asset(
-                              'assets/Images/drawerIcon.png',
-                              height: 100,
-                              width: 100,
-                              color: kWhiteColor,
-                            )),
-                      ), //  : SizedBox(),
+                SizedBox(
+                  width: 50,
+                  child: IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_rounded,
+                        color: kWhiteColor,
+                      )),
+                ),
                 const SizedBox(
                     width: 16), // Add spacing between back button and title
                 Text(
@@ -68,16 +51,6 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                     child:
                         SizedBox()), // Add spacing between title and trailing
                 trailing ?? const SizedBox(),
-                isHome == true
-                    ? GestureDetector(
-                        onTap: () {
-                          navigatorPush(context, const ChatHeadScreen());
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Icon(Icons.message_rounded,color: kWhiteColor,)                        ),
-                      )
-                    : Container(),
               ],
             ),
           ),

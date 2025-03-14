@@ -1,3 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:mended_soluctions/Presentation/Screens/Home/order_history.dart';
+import 'package:mended_soluctions/Presentation/Screens/Profile/Profile.dart';
+import 'package:mended_soluctions/Presentation/Widgets/MyAppBar.dart';
 import '../../../Core/Routes/Routes.dart';
 import '../../../Presentation/Screens/AboutUs/AboutUs.dart';
 import '../../../Presentation/Screens/AppointmentSchedule/WeekDaysScreen.dart';
@@ -5,13 +11,13 @@ import '../../../Presentation/Screens/PrivacyPolicy/PrivacyPolicyScreen.dart';
 import '../../../Presentation/Screens/ChangePassword/ChangePasswordScreen.dart';
 import '../../../Presentation/Screens/Settings/DeleteAccountScreen.dart';
 import '../../../Presentation/Screens/TermsOfUse/TermsOfUse.dart';
-import '../../../Presentation/Widgets/MyAppBar.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import '../../Bloc/GetServiceProviderDetailBloc/get_serviceProvider_details_bloc.dart';
+import '../../Bloc/LogOutBloc/log_out_bloc.dart';
 import '../../Bloc/ThemeBloc/theme_bloc.dart';
 import '../../helper/Constants/MyColors.dart';
+import '../Appoinments/AppointmentHistoryScreen.dart';
+import '../CustomerRequests/customer_request.dart';
+import '../User/LogIn/LogIn.dart';
 
 class SettingsMenuScreen extends StatelessWidget {
   const SettingsMenuScreen({super.key});
@@ -29,25 +35,33 @@ class SettingsMenuScreen extends StatelessWidget {
           return Scaffold(
             backgroundColor:
                 themestate is DarkThemeState ? kBlackColor : kWhiteColor,
-            appBar: MyAppBar(title: 'Settings', isDrawer: false),
+            appBar: MyAppBar(title: 'Settings'),
             body: Container(
               margin: const EdgeInsets.only(top: 5),
               child: Column(children: [
-                ListTile(
-                  leading: Icon(
-                    Icons.access_time_outlined,
-                    color: themestate is DarkThemeState
-                        ? kWhiteColor
-                        : kBlackColor,
-                  ),
-                  title: Text(
-                    'Manage Availability',
-                    style: TextStyle(
-                      color: themestate is DarkThemeState
-                          ? kWhiteColor
-                          : kBlackColor,
-                    ),
-                  ),
+                ListItems(
+                  icon: Icons.person,
+                  onTap: () {
+                    navigatorPush(context, const ProfileScreen());
+                  },
+                  title: 'My Profile',
+                ),
+                ListItems(
+                  icon: Icons.history,
+                  onTap: () {
+                    navigatorPush(context, const AppointmentHistoryScreen());
+                  },
+                  title: 'Appointment History',
+                ),
+                ListItems(
+                  icon: Icons.done,
+                  onTap: () {
+                    navigatorPush(context, const OrderHistory());
+                  },
+                  title: 'My Orders',
+                ),
+                ListItems(
+                  icon: Icons.access_time_outlined,
                   onTap: () {
                     navigatorPush(
                         context,
@@ -55,175 +69,104 @@ class SettingsMenuScreen extends StatelessWidget {
                           isNew: false,
                         ));
                   },
+                  title: 'Manage Availability',
                 ),
-                Divider(
-                  color: themestate is DarkThemeState
-                      ? kWhiteColor
-                      : kBlackColor12,
+                ListItems(
+                  icon: Icons.error,
+                  onTap: () {
+                    navigatorPush(context, const CustomerRequestScreen());
+                  },
+                  title: 'Complaints',
                 ),
-                ListTile(
-                  leading: Icon(
-                    Icons.lock,
-                    color: themestate is DarkThemeState
-                        ? kWhiteColor
-                        : kBlackColor,
-                  ),
-                  title: Text(
-                    'Change Password',
-                    style: TextStyle(
-                      color: themestate is DarkThemeState
-                          ? kWhiteColor
-                          : kBlackColor,
-                    ),
-                  ),
+                ListItems(
+                  icon: Icons.lock,
                   onTap: () {
                     navigatorPush(context, ChangePasswordScreen());
                   },
+                  title: 'Change Password',
                 ),
-                Divider(
-                  color: themestate is DarkThemeState
-                      ? kWhiteColor
-                      : kBlackColor12,
-                ),
-
-                // ListTile(
-                //   leading: Icon(
-                //     Icons.light_mode,
-                //     color:
-                //         themestate is DarkThemeState ? kWhiteColor : kBlackColor,
-                //   ),
-                //   title: Text(
-                //     'Theme',
-                //     style: TextStyle(
-                //       color: themestate is DarkThemeState
-                //           ? kWhiteColor
-                //           : kBlackColor,
-                //     ),
-                //   ),
-                //   onTap: () {
-                //     navigatorPush(context, const ThemeScreen());
-                //   },
-                // ),
-                ListTile(
-                  leading: Icon(
-                    Icons.delete,
-                    color: themestate is DarkThemeState
-                        ? kWhiteColor
-                        : kBlackColor,
-                  ),
-                  title: Text(
-                    'Delete Account',
-                    style: TextStyle(
-                      color: themestate is DarkThemeState
-                          ? kWhiteColor
-                          : kBlackColor,
-                    ),
-                  ),
+                ListItems(
+                  icon: Icons.delete,
                   onTap: () {
                     navigatorPush(context, DeleteAccountScreen());
                   },
+                  title: 'Delete Account',
                 ),
-                Divider(
-                  thickness: 0.1,
-                  color:
-                      themestate is DarkThemeState ? kWhiteColor : kBlackColor,
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.privacy_tip,
-                    color: themestate is DarkThemeState
-                        ? kWhiteColor
-                        : kBlackColor,
-                  ),
-                  title: Text(
-                    'Privacy Policy',
-                    style: TextStyle(
-                      color: themestate is DarkThemeState
-                          ? kWhiteColor
-                          : kBlackColor,
-                    ),
-                  ),
+                ListItems(
+                  icon: Icons.privacy_tip,
                   onTap: () {
                     navigatorPush(context, const PrivacyPolicyScreen());
                   },
+                  title: 'Privacy Policy',
                 ),
-                Divider(
-                  thickness: 0.1,
-                  color:
-                      themestate is DarkThemeState ? kWhiteColor : kBlackColor,
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.file_copy_rounded,
-                    color: themestate is DarkThemeState
-                        ? kWhiteColor
-                        : kBlackColor,
-                  ),
-                  title: Text(
-                    'Terms Of Use',
-                    style: TextStyle(
-                      color: themestate is DarkThemeState
-                          ? kWhiteColor
-                          : kBlackColor,
-                    ),
-                  ),
+                ListItems(
+                  icon: Icons.file_copy_rounded,
                   onTap: () {
                     navigatorPush(context, const TermToUseScreen());
                   },
+                  title: 'Terms Of Use',
                 ),
-                Divider(
-                  thickness: 0.1,
-                  color:
-                      themestate is DarkThemeState ? kWhiteColor : kBlackColor,
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.info,
-                    color: themestate is DarkThemeState
-                        ? kWhiteColor
-                        : kBlackColor,
-                  ),
-                  title: Text(
-                    'About Us',
-                    style: TextStyle(
-                      color: themestate is DarkThemeState
-                          ? kWhiteColor
-                          : kBlackColor,
-                    ),
-                  ),
+                ListItems(
+                  icon: Icons.info,
                   onTap: () {
                     navigatorPush(context, const AboutUsScreen());
                   },
+                  title: 'About Us',
                 ),
-                Divider(
-                  thickness: 0.1,
-                  color:
-                      themestate is DarkThemeState ? kWhiteColor : kBlackColor,
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.download,
-                    color: themestate is DarkThemeState
-                        ? kWhiteColor
-                        : kBlackColor,
-                  ),
-                  title: Text(
-                    'Download your information',
-                    style: TextStyle(
-                      color: themestate is DarkThemeState
-                          ? kWhiteColor
-                          : kBlackColor,
-                    ),
-                  ),
+                ListItems(
+                  icon: Icons.download,
                   onTap: () {
                     BlocProvider.of<GetDetailBloc>(context)
                         .add(GetServiceProviderDetailEvent());
                   },
+                  title: 'Download your information',
+                ),
+                ListItems(
+                  icon: Icons.logout,
+                  onTap: () {
+                    BlocProvider.of<LogOutBloc>(context).add(LogOutEvent());
+                    navigatorPushAndRemoveUntil(context, const LogInScreen());
+                  },
+                  title: 'Log Out',
                 ),
               ]),
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class ListItems extends StatelessWidget {
+  ListItems(
+      {super.key,
+      required this.title,
+      required this.icon,
+      required this.onTap});
+  String title;
+  IconData icon;
+  void Function()? onTap;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: kBlackColor12.withValues(),
+      ),
+      child: ListTile(
+        onTap: onTap,
+        leading: CircleAvatar(
+          backgroundColor: kWhiteColor,
+          child: Icon(icon, color: kSecondaryColor),
+        ),
+        title: Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+        trailing: const Icon(Icons.arrow_right_rounded),
       ),
     );
   }

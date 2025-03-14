@@ -2,9 +2,9 @@ part of 'services_bloc.dart';
 
 abstract class ServicesEventBase {}
 
-class AddNewService extends ServicesEventBase {
-  AddServicesModel? model;
-  AddNewService({this.model});
+class CreateOrUpdateServiceEvent extends ServicesEventBase {
+  CreateOrEditServiceModel? model;
+  CreateOrUpdateServiceEvent({this.model});
 }
 
 class GetAllService extends ServicesEventBase {}
@@ -14,7 +14,7 @@ class DeleteService extends ServicesEventBase {
   DeleteService({this.model});
 }
 
-class UpdateService extends ServicesEventBase {
-  UpdateServiceModel? model;
-  UpdateService({this.model});
+class DeleteServiceImage extends ServicesEventBase {
+  DeleteServiceImageModel? model;
+  DeleteServiceImage({this.model});
 }

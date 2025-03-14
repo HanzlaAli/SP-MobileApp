@@ -15,6 +15,7 @@ class MyTextFieldWithNoLogo extends StatelessWidget {
       this.focusNode,
       this.onFieldSubmitted,
       this.onTap,
+      this.maxLines,
       this.fillColor = Colors.black12,
       required this.textEditingController,
       this.width,
@@ -31,6 +32,7 @@ class MyTextFieldWithNoLogo extends StatelessWidget {
   TextInputAction? textInputAction;
   FocusNode? focusNode;
   Function()? onTap;
+  int? maxLines;
   TextEditingController textEditingController;
   Color fillColor;
   @override
@@ -49,6 +51,7 @@ class MyTextFieldWithNoLogo extends StatelessWidget {
             readOnly: readOnly,
             cursorColor: textInputColor,
             onTap: onTap,
+            maxLines: maxLines,
             validator: validator,
             focusNode: focusNode,
             controller: textEditingController,

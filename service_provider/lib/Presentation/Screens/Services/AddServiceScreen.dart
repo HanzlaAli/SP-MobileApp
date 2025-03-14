@@ -1,10 +1,9 @@
 // ignore_for_file: must_be_immutable, file_names
 //import 'package:date_time_picker/date_time_picker.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../Presentation/helper/ReusedFunctions.dart';
-import '../../../Data/Models/ServicesModels/AddServiceModel.dart';
-import '../../../Data/Models/ServicesModels/UpdateServiceModel.dart'
-    as updateService;
+import '../../../Data/Models/ServicesModels/create_or_edit_service_model.dart';
 import '../../../Data/Models/TherapyModels/GetServiceProviderTherapyModel.dart';
 import '../../../Presentation/Bloc/GetServiceProviderTherapiesBloc/get_serviceProvider_therapies_bloc.dart';
 import '../../../Presentation/Bloc/ServicesBloc/services_bloc.dart';
@@ -19,6 +18,7 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_datetime_picker/flutter_datetime_picker.dart'
 //     as dt_picker;
 import 'package:get/get.dart';
+import '../../Widgets/MyTextButton.dart';
 import '../../helper/Constants/MyColors.dart';
 import '../../helper/Constants/MySpaces.dart';
 import '../../../Data/Models/ServicesModels/GetServiceModel.dart';
@@ -40,24 +40,21 @@ class _AddServicesState extends State<AddServices> {
         .add(GetAllServiceProviderTherapies());
     if (widget.model != null) {
       nameController.text = widget.model!.name.toString();
+      descriptionController.text = widget.model!.description.toString();
       chargesController.text = widget.model!.charges!.round().toString();
-      numberOfTimesAvalibleController.text =
-          widget.model!.numberOfTimesAvailable.toString();
-      validTillController.text = dateTimetoDateConverter(
-          DateTime.parse(widget.model!.validTill.toString()));
-      validTill =
-          DateTime.parse(widget.model!.validTill.toString()).toIso8601String();
     }
     super.initState();
   }
 
-  GetServiceProviderTherapyModel? getServiceProviderTherapyModel;
+  GetServiceProviderTherapyModel? getServiceProviderServiceModel;
 
   final nameController = TextEditingController();
+  final descriptionController = TextEditingController();
   final chargesController = TextEditingController();
-  final numberOfTimesAvalibleController = TextEditingController();
-  final validTillController = TextEditingController();
-  String? validTill;
+  final discountController = TextEditingController();
+  List<XFile> images = [];
+  final ImagePicker picker = ImagePicker();
+
   @override
   Widget build(BuildContext context) {
     return BackdropFilter(
@@ -79,6 +76,7 @@ class _AddServicesState extends State<AddServices> {
             ),
             child: SingleChildScrollView(
               child: Column(
+                spacing: 20,
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -87,19 +85,14 @@ class _AddServicesState extends State<AddServices> {
                       widget.model != null
                           ? "Update Service"
                           : 'Add New Services'),
-                  verticalSpacing20,
                   _nameTextField(),
-                  verticalSpacing20,
-                  _therapyTypeTextBox(),
-                  verticalSpacing20,
+                  _serviceTypeTextBox(),
                   _chargesTextField(),
-                  verticalSpacing20,
-                  _noOfTimesAvalibleTextField(),
-                  verticalSpacing20,
-                  dateTextBox(),
-                  verticalSpacing20,
+                  _chargesTextField(),
+                  _discountTextField(),
+                  _descriptionTextField(),
+                  _imagesPicker(),
                   _submitButton(context),
-                  verticalSpacing20,
                 ],
               ),
             ),
@@ -109,57 +102,77 @@ class _AddServicesState extends State<AddServices> {
     );
   }
 
-  Widget dateTextBox() => kIsWeb
-      ? SizedBox(
-          width: getWidth(MediaQuery.of(context).size.width),
-          child: DateTimePicker(
-            firstDate: DateTime(2022),
-            lastDate: DateTime(2100),
-            type: DateTimePickerType.date,
-            dateLabelText: 'Date',
-            controller: validTillController,
-            onChanged: (val) {
-              validTillController.text =
-                  dateTimetoDateConverter(DateTime.parse(val));
-              // fromDate = TimeOfDay(
-              //     hour: DateTime.parse(val).hour,
-              //     minute: DateTime.parse(val).minute);
-              setState(() {});
-            },
-            decoration: InputDecoration(
-              hintText: 'Date',
-              errorBorder: textFielderrorBorder,
-              focusedErrorBorder: textFielderrorBorder,
-              focusedBorder: textFieldFocusBorder,
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-              enabledBorder: textFieldEnabledBorder,
-              filled: true,
+  Widget _imagesPicker() {
+    return Column(
+      children: [
+        MyTextButton(
+          onPressed: _pickImages,
+          text: "Select Images",
+          color: kPrimaryColor,
+        ),
+        const SizedBox(height: 10),
+        if (images.isNotEmpty)
+          SizedBox(
+            height: 150,
+            child: ListView.builder(
+              itemCount: images.length,
+              itemBuilder: (context, index) => ListTile(
+                title: Text(images[index].path.split('/').last,
+                    overflow: TextOverflow.ellipsis),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                  onPressed: () {
+                    setState(() {
+                      images.removeAt(index);
+                    });
+                  },
+                ),
+              ),
             ),
           ),
-        )
-      : MyTextFieldWithNoLogo(
-          hintText: 'Date',
-          readOnly: true,
-          onTap: () {
-            // DatePicker.showDatePicker(context,
-            //     theme: const dt_picker.DatePickerTheme(
-            //       containerHeight: 210.0,
-            //     ),
-            //     showTitleActions: true, onConfirm: (date) {
-            //   validTillController.text = dateTimetoDateConverter(date);
-            //   validTill = date.toIso8601String();
-            //   setState(() {});
-            // }, currentTime: DateTime.now(), locale: LocaleType.en);
-          },
-          textEditingController: validTillController,
-          validator: (val) {},
-        );
+      ],
+    );
+  }
+
+  Future<void> _pickImages() async {
+    if (images.length >= 5) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("You can only select up to 5 images.")),
+      );
+      return;
+    }
+    final List<XFile> selectedImages = await picker.pickMultiImage();
+
+    if (selectedImages.isNotEmpty) {
+      setState(() {
+        List<XFile> validImages = selectedImages.where((file) {
+          String extension = file.path.split('.').last.toLowerCase();
+          return ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']
+              .contains(extension);
+        }).toList();
+
+        if (validImages.length < selectedImages.length) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text("Some files were not images and were ignored.")),
+          );
+        }
+
+        if (images.length + validImages.length > 5) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Total images cannot exceed 5.")),
+          );
+        } else {
+          images.addAll(validImages);
+        }
+      });
+    }
+  }
 
   MyButton _submitButton(BuildContext context) {
     return MyButton(
       onPressed: () {
-        if (getServiceProviderTherapyModel != null) {
+        if (getServiceProviderServiceModel != null) {
           submit();
           Get.back();
         }
@@ -171,42 +184,34 @@ class _AddServicesState extends State<AddServices> {
   }
 
   void submit() {
-    if (widget.model != null && widget.model!.id != null) {
-      BlocProvider.of<ServicesBloc>(context).add(
-        UpdateService(
-          model: updateService.UpdateServiceModel(
-              service: updateService.Service(
-            id: widget.model!.id,
-            charges: int.parse(chargesController.text),
-            serviceProviderTherapyId: getServiceProviderTherapyModel!.id,
-            name: nameController.text,
-            numberOfTimesAvailable:
-                int.parse(numberOfTimesAvalibleController.text),
-            validTill: DateTime.now().toIso8601String(),
-          )),
-        ),
+    if (getServiceProviderServiceModel?.id == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select a service type.")),
       );
-    } else {
-      BlocProvider.of<ServicesBloc>(context).add(
-        AddNewService(
-          model: AddServicesModel(
-            service: Service(
-              charges: int.parse(chargesController.text),
-              serviceProviderTherapyId: getServiceProviderTherapyModel!.id,
-              name: nameController.text,
-              numberOfTimesAvailable:
-                  int.parse(numberOfTimesAvalibleController.text),
-              validTill: validTill,
-            ),
-          ),
-        ),
-      );
+      return;
     }
+    // if (_formKey.currentState!.validate()) {
+    BlocProvider.of<ServicesBloc>(context).add(
+      CreateOrUpdateServiceEvent(
+        model: CreateOrEditServiceModel(
+          id: widget.model?.id ?? 0,
+          charges: double.tryParse(chargesController.text) ?? 0.0,
+          name: nameController.text,
+          validTill: DateTime.now(),
+          description: '',
+          serviceProviderServiceTypeId: getServiceProviderServiceModel?.id ?? 0,
+          serviceProviderEmail: '',
+          discount: double.tryParse(discountController.text) ?? 0.0,
+          images: images,
+        ),
+      ),
+    );
+    //}
   }
 
-  MyTextFieldWithNoLogo _noOfTimesAvalibleTextField() {
+  MyTextFieldWithNoLogo _discountTextField() {
     return MyTextFieldWithNoLogo(
-      textEditingController: numberOfTimesAvalibleController,
+      textEditingController: discountController,
       validator: (val) {
         if (val!.isEmpty) {
           return "Field is Empty";
@@ -243,13 +248,22 @@ class _AddServicesState extends State<AddServices> {
     );
   }
 
-  Widget _therapyTypeTextBox() =>
-      BlocBuilder<GetServiceProviderTherapiesBloc, GetServiceProviderTherapiesState>(
+  MyTextFieldWithNoLogo _descriptionTextField() {
+    return MyTextFieldWithNoLogo(
+      textEditingController: descriptionController,
+      hintText: 'Description',
+      validator: (value) => value!.isEmpty ? 'Enter description' : null,
+      maxLines: 3,
+    );
+  }
+
+  Widget _serviceTypeTextBox() => BlocBuilder<GetServiceProviderTherapiesBloc,
+          GetServiceProviderTherapiesState>(
         builder: (context, state) {
           if (state is GetServiceProviderTherapiesLoading) {
           } else if (state is GetServiceProviderTherapiesLoaded) {
             if (widget.model != null && widget.model!.id != null) {
-              getServiceProviderTherapyModel = state.list?.firstWhere((x) =>
+              getServiceProviderServiceModel = state.list?.firstWhere((x) =>
                   x.therapyName?.toLowerCase() ==
                   widget.model?.therapyName?.toLowerCase());
             }
@@ -257,14 +271,14 @@ class _AddServicesState extends State<AddServices> {
             return SizedBox(
               width: kIsWeb ? Get.width * 0.3 : Get.width * 0.8,
               child: MyDropDownTextFieldwithNoLogo(
-                hintText: 'Therapy Type',
-                value: (getServiceProviderTherapyModel ?? null),
+                hintText: 'Service Type',
+                value: (getServiceProviderServiceModel ?? null),
                 validator: (val) {
                   return null;
                 },
                 onChanged: (newValue) {
                   setState(() {
-                    getServiceProviderTherapyModel = state.list!
+                    getServiceProviderServiceModel = state.list!
                         .singleWhere((licenseType) => licenseType == newValue);
                   });
                 },

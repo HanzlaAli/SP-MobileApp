@@ -52,21 +52,15 @@ class _ServiceDetailState extends State<ServiceDetail> {
                       verticalSpacing20,
                       Text(
                         '${widget.model!.charges}\$',
-                        style: const TextStyle(
-                            color: kPrimaryColor, fontSize: 15),
-                      ),
-                      verticalSpacing20,
-                      Text(
-                        '${widget.model!.numberOfTimesAvailable}x',
-                        style: const TextStyle(
-                            fontSize: 15, color: kPrimaryColor),
+                        style:
+                            const TextStyle(color: kPrimaryColor, fontSize: 15),
                       ),
                       verticalSpacing20,
                       Text(
                         dateTimetoDateConverter(
                             DateTime.parse(widget.model!.validTill!)),
-                        style: const TextStyle(
-                            fontSize: 15, color: kPrimaryColor),
+                        style:
+                            const TextStyle(fontSize: 15, color: kPrimaryColor),
                       ),
                     ],
                   ),

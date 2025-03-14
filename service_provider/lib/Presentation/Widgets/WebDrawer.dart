@@ -1,6 +1,5 @@
 // ignore_for_file: file_names
 import '../../Presentation/Bloc/GetProfileBloc/get_profile_bloc.dart';
-import '../../Presentation/Screens/Profile/Profile.dart';
 import '../../Presentation/Screens/Services/ServicesScreen.dart';
 import '../../Presentation/Screens/User/LogIn/LogIn.dart';
 import 'package:flutter/material.dart';
@@ -61,9 +60,7 @@ class _MyWebDrawerState extends State<MyWebDrawer> {
         label: 'Appointments',
         icon: Icons.access_time,
         onTap: () {
-          setState(() => child = AppoinmentsScreen(
-                fromDrawer: true,
-              ));
+          setState(() => child = AppoinmentsScreen());
         },
       ),
       SidebarXItem(
