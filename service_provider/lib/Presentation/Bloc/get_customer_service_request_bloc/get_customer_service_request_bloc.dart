@@ -20,7 +20,7 @@ class GetCustomerServiceRequestBloc extends Bloc<GetCustomerServiceRequestEvent,
       if (token != null) {
         Either<ErrorModel, List<CustomerRequestServiceModel>> res =
             await customerRequestService.getCustomerRequestedServices(
-                token, event.filter);
+                token, event.filter,event.serviceTypeId);
         res.fold((l) => emit(GetCustomerServiceRequestError(model: l)), (r) {
           emit(GetCustomerServiceRequestLoaded(model: r));
         });

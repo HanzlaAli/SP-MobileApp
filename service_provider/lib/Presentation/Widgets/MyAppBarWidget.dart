@@ -3,16 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../helper/Constants/MyColors.dart';
 
-class MyAppBarWidget extends StatelessWidget {
+class MyAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   MyAppBarWidget({
-    Key? key,
+    super.key,
     this.icon,
     required this.pageNo,
     this.text,
-  }) : super(key: key);
+  });
   Widget? icon;
   String? text;
   String pageNo;
+  
+    @override
+  Size get preferredSize =>  const Size.fromHeight(60);
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mended_soluctions/Presentation/Widgets/MyAppBar.dart';
-import 'package:mended_soluctions/Presentation/Widgets/MyDrawer.dart';
 import 'package:shimmer/shimmer.dart';
-
 import '../../../Core/Routes/Routes.dart';
 import '../../Bloc/TransactionBloc/transaction_bloc.dart';
+import '../../Widgets/MyAppBar.dart';
 import '../../Widgets/MyTextButton.dart';
 import '../../helper/Constants/MyColors.dart';
 import '../../helper/Constants/MySpaces.dart';
@@ -19,6 +17,7 @@ class OrderHistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: MyAppBar(title: 'Orders'),
       body: Column(
         children: [
           SizedBox(

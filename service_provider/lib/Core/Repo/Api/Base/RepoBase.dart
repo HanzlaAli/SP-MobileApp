@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 
 class RepoBase {
   String apiUrl = 'http://132.148.73.196:81/api/';
-
   //String apiUrl = 'http://localhost:64167/api/';
 
   Future<http.Response> post(

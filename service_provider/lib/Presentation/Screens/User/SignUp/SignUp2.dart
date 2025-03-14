@@ -25,7 +25,6 @@ import '../../../helper/Constants/MySpaces.dart';
 import '../../../helper/Constants/MyTextFieldsStyling.dart';
 import '../../../helper/ReusedFunctions.dart';
 import '../../../Bloc/GetServiceProviderLicenseTypeBloc/get_serviceProvider_license_types_bloc.dart';
-import '../../../Bloc/GetServiceProviderSpecializationBloc/get_serviceProvider_specialization_bloc.dart';
 import '../../../Bloc/GetServiceProviderTherapyTypesBloc/get_therapy_types_bloc.dart';
 import '../../../Widgets/MyAppBarWidget.dart';
 import '../../../Widgets/MyButton.dart';
@@ -152,9 +151,6 @@ class _SignUp2State extends State<SignUp2> {
           Get.snackbar("Added!", 'Profile Updated');
           BlocProvider.of<GetServiceProviderLicenseTypesBloc>(context)
               .add(const GetServiceProviderLicenseTypesEvent());
-
-          BlocProvider.of<GetServiceProviderSpecializationBloc>(context)
-              .add(const GetServiceProviderSpecializationEvent());
 
           BlocProvider.of<GetTherapyTypesBloc>(context)
               .add(const GetTherapyTypesEvent());

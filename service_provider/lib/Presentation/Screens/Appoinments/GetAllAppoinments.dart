@@ -1,15 +1,11 @@
 // ignore_for_file: file_names, unnecessary_null_comparison
 import 'dart:math';
 import 'package:permission_handler/permission_handler.dart';
-
-import '../../../Core/Routes/Routes.dart';
 import '../../../Presentation/helper/Constants/MyColors.dart';
 import '../../../Data/Models/AppoinmentModels/GetAppoinmentRequestModel.dart';
 import '../../../Data/Models/AppointmentRoomModel/CreateAppointmentRoomModel.dart';
 import '../../../Presentation/Bloc/GetServiceProviderAppoinments/get_serviceProvider_appoinments_bloc.dart';
 import '../../../Presentation/Bloc/GetProfileBloc/get_profile_bloc.dart';
-import '../../../Presentation/Screens/VideoCalling/VideoCalling.dart';
-import '../../../Presentation/Widgets/MyAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -20,14 +16,12 @@ import '../../../Data/Models/PushNotificationModel/VideoCallPushNotificationMode
 import '../../Bloc/AppointmentRoom/appointment_room_bloc.dart';
 import '../../Bloc/PushNotificationBloc/push_notification_bloc.dart';
 import '../../Bloc/ThemeBloc/theme_bloc.dart';
-import '../../Widgets/MyDrawer.dart';
 import '../../../Data/Models/PushNotificationModel/NotificationModel.dart'
     as notification;
 
 class AppoinmentsScreen extends StatefulWidget {
   static const routeName = '/appoinments';
-  AppoinmentsScreen({super.key, required this.fromDrawer});
-  bool fromDrawer;
+  AppoinmentsScreen({super.key});
   @override
   State<AppoinmentsScreen> createState() => _AppoinmentsScreenState();
 }
@@ -37,13 +31,14 @@ class _AppoinmentsScreenState extends State<AppoinmentsScreen> {
   void initState() {
     ftoast.init(context);
 
-    BlocProvider.of<GetServiceProviderAppoinmentsBloc>(context).add(GetServiceProviderAppoinments(
-        model: GetBookedAppoinmentRequestModel(
-            fromDate: DateTime.now().toIso8601String(),
-            email: "",
-            toDate: DateTime.now()
-                .add(const Duration(days: 10))
-                .toIso8601String())));
+    BlocProvider.of<GetServiceProviderAppoinmentsBloc>(context).add(
+        GetServiceProviderAppoinments(
+            model: GetBookedAppoinmentRequestModel(
+                fromDate: DateTime.now().toIso8601String(),
+                email: "",
+                toDate: DateTime.now()
+                    .add(const Duration(days: 10))
+                    .toIso8601String())));
     super.initState();
   }
 
@@ -155,12 +150,6 @@ class _AppoinmentsScreenState extends State<AppoinmentsScreen> {
             customerName: state.model!.customerName,
           );
           sendNotification(data);
-
-          // navigatorPush(
-          //     context,
-          //     VideoCallScreen(
-          //       model: state.model,
-          //     ));
         } else if (state is AppointmentRoomError) {
           if (state.model?.code == 503) {
             showToast(state.model!.message!);
@@ -170,11 +159,6 @@ class _AppoinmentsScreenState extends State<AppoinmentsScreen> {
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, themestate) {
           return Scaffold(
-            drawer: const MyDrawer(),
-            appBar: MyAppBar(
-              isDrawer: widget.fromDrawer,
-              title: 'Appoinments',
-            ),
             body: BlocListener<GetServiceProviderAppoinmentsBloc,
                 GetServiceProviderAppoinmentsStateBase>(
               listener: (context, state) {
@@ -185,15 +169,14 @@ class _AppoinmentsScreenState extends State<AppoinmentsScreen> {
               },
               child: SfCalendar(
                 minDate: DateTime.now(),
-                todayHighlightColor: themestate is DarkThemeState
-                    ? kBlackColor
-                    : kPrimaryColor,
+                todayHighlightColor:
+                    themestate is DarkThemeState ? kBlackColor : kPrimaryColor,
                 onViewChanged: (viewChangedDetails) {
                   if (prevDate == null ||
                       prevDate != viewChangedDetails.visibleDates.first) {
                     prevDate = viewChangedDetails.visibleDates.first;
-                    BlocProvider.of<GetServiceProviderAppoinmentsBloc>(context).add(
-                        GetServiceProviderAppoinments(
+                    BlocProvider.of<GetServiceProviderAppoinmentsBloc>(context)
+                        .add(GetServiceProviderAppoinments(
                             model: GetBookedAppoinmentRequestModel(
                                 fromDate: viewChangedDetails.visibleDates.first
                                     .toIso8601String(),
@@ -216,17 +199,21 @@ class _AppoinmentsScreenState extends State<AppoinmentsScreen> {
                       String.fromCharCodes(Iterable.generate(length,
                           (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
                   if (val.appointments != null && model != null) {
-                    GetServiceProviderAppoinmentsModel getServiceProviderAppoinmentsModel = model!
-                        .singleWhere((x) => x.id == val.appointments?[0].id);
-                    var name = getServiceProviderAppoinmentsModel.id.toString() +
-                        getRandomString(5);
+                    GetServiceProviderAppoinmentsModel
+                        getServiceProviderAppoinmentsModel = model!.singleWhere(
+                            (x) => x.id == val.appointments?[0].id);
+                    var name =
+                        getServiceProviderAppoinmentsModel.id.toString() +
+                            getRandomString(5);
                     if (getServiceProviderAppoinmentsModel != null) {
                       BlocProvider.of<AppointmentRoomBloc>(context).add(
                         AddAppointmentRoom(
-                          customerId: val.appointments?[0].customerId.toString(),
+                          customerId:
+                              val.appointments?[0].customerId.toString(),
                           model: CreateAppointmentRoomModel(
                             appointmentRoomRequest: AppointmentRoomRequest(
-                                appointmentId: getServiceProviderAppoinmentsModel.id,
+                                appointmentId:
+                                    getServiceProviderAppoinmentsModel.id,
                                 roomName: name,
                                 rtcToken: ""),
                           ),

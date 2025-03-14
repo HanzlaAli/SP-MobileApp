@@ -67,10 +67,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 state is DarkThemeState ? kBlackColor : kWhiteColor,
             appBar: _appBar(
                 context,
-                widget.model!.imageUrl.toString(),
-                widget.model!.userName.toString(),
+                widget.model?.imageUrl.toString()?? "",
+                widget.model?.userName.toString()??"",
                 widget.model?.isActive ?? false,
-                widget.model!.lastActive ?? "",
+                widget.model?.lastActive ?? "",
                 state),
             body: Stack(
               children: [
@@ -88,8 +88,8 @@ class _ChatScreenState extends State<ChatScreen> {
         height: chatSheetHeight,
         child: StreamBuilder<List<ChatModel>>(
           stream: controller.getChat(
-              otherUserId: widget.model!.reciverId,
-              currentuserId: widget.model!.uId,
+              otherUserId: widget.model?.reciverId,
+              currentuserId: widget.model?.uId,
               length: nextVal == 0 ? initialValue : nextVal),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {

@@ -8,11 +8,15 @@ class ChatHeadModel {
 
   ChatHeadModel.fromJson(DocumentSnapshot json) {
     userId = int.parse(json.id);
+    Map<String, dynamic>? data = json.data() as Map<String, dynamic>?;
+      
+    if(data != null){
     if (json['Users'] != null) {
       users = <Users>[];
       json['Users'].forEach((v) {
         users!.add(Users.fromJson(v));
       });
+    }
     }
   }
 

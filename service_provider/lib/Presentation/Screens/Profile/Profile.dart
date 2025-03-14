@@ -1,14 +1,13 @@
 // ignore_for_file: must_be_immutable, file_names, prefer_typing_uninitialized_variables
-import '../../../Presentation/Bloc/GetProfileBloc/get_profile_bloc.dart';
-import '../../../Presentation/Widgets/ServiceProviderLicenseDetails.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../Presentation/helper/Constants/Constants.dart';
-import '../../../Presentation/Widgets/MyAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../Presentation/Bloc/GetProfileBloc/get_profile_bloc.dart';
+import '../../../Presentation/Widgets/ServiceProviderLicenseDetails.dart';
+import '../../../Presentation/helper/Constants/Constants.dart';
+import '../../../Presentation/Widgets/MyAppBar.dart';
 import '../../../Core/Routes/Routes.dart';
 import '../../Bloc/AddServiceProviderLicenseBloc/add_serviceProvider_license_bloc.dart';
-import '../../Bloc/AddServiceProviderSpecializationBloc/add_serviceProvider_specialization_bloc.dart';
 import '../../Bloc/AddServiceProviderTherapyBloc/add_serviceProvider_therapy_bloc.dart';
 import '../../helper/Constants/MyColors.dart';
 import '../../helper/Constants/MyIcons.dart';
@@ -17,13 +16,12 @@ import '../../../Data/Models/ProfileModels/ServiceProviderProfileModel.dart';
 import '../../Bloc/GetServiceProviderLicenseTypeBloc/get_serviceProvider_license_types_bloc.dart';
 import '../../Bloc/GetServiceProviderSpecializationBloc/get_serviceProvider_specialization_bloc.dart';
 import '../../Bloc/GetServiceProviderTherapyTypesBloc/get_therapy_types_bloc.dart';
-import '../../Widgets/MyDrawer.dart';
 import '../../Widgets/MyIconWithText.dart';
 import 'EditProfile.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const routeName = '/profile';
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -46,113 +44,93 @@ class _ProfileScreenState extends State<ProfileScreen> {
           BlocProvider.of<GetProfileBloc>(context).add(GetServiceProviderProfileEvent());
         }
       },
-      child: BlocListener<AddServiceProviderSpecializationBloc,
-          AddServiceProviderSpecializationStateBase>(
+      child: BlocListener<AddServiceProviderLicenseBloc, AddServiceProviderLicenseStateBase>(
         listener: (context, state) {
-          if (state is AddServiceProviderSpecializationSuccess) {
+          if (state is AddServiceProviderLicenseSuccess) {
             BlocProvider.of<GetProfileBloc>(context)
                 .add(GetServiceProviderProfileEvent());
           }
         },
-        child: BlocListener<AddServiceProviderLicenseBloc, AddServiceProviderLicenseStateBase>(
-          listener: (context, state) {
-            if (state is AddServiceProviderLicenseSuccess) {
+        child: Scaffold(
+          appBar: MyAppBar(
+            trailing: GestureDetector(
+              onTap: () {
+                navigatorPush(
+                    context,
+                    EditProfile(
+                      serviceProviderProfileModel: serviceProvider,
+                    ));
+                BlocProvider.of<GetServiceProviderLicenseTypesBloc>(context)
+                    .add(const GetServiceProviderLicenseTypesEvent());
+
+                BlocProvider.of<GetTherapyTypesBloc>(context)
+                    .add(const GetTherapyTypesEvent());
+              },
+              child: const SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: Icon(
+                    Icons.edit_outlined,
+                    color: kWhiteColor,
+                  )),
+            ),
+            title: 'My Profile',
+          ),
+          body: RefreshIndicator(
+            onRefresh: () async {
               BlocProvider.of<GetProfileBloc>(context)
                   .add(GetServiceProviderProfileEvent());
-            }
-          },
-          child: Scaffold(
-            drawer: const MyDrawer(),
-            appBar: MyAppBar(
-              trailing: GestureDetector(
-                onTap: () {
-                  navigatorPush(
-                      context,
-                      EditProfile(
-                        serviceProviderProfileModel: serviceProvider,
-                      ));
-                  BlocProvider.of<GetServiceProviderLicenseTypesBloc>(context)
-                      .add(const GetServiceProviderLicenseTypesEvent());
-
-                  BlocProvider.of<GetServiceProviderSpecializationBloc>(context)
-                      .add(const GetServiceProviderSpecializationEvent());
-
-                  BlocProvider.of<GetTherapyTypesBloc>(context)
-                      .add(const GetTherapyTypesEvent());
-                },
-                child: Container(
-                    height: 50,
-                    width: 50,
-                    child: const Icon(
-                      Icons.edit,
-                      color: kPrimaryColor,
-                    )),
-              ),
-              title: 'My Profile',
-            ),
-            body: RefreshIndicator(
-              onRefresh: () async {
-                BlocProvider.of<GetProfileBloc>(context)
-                    .add(GetServiceProviderProfileEvent());
+            },
+            child: BlocBuilder<GetProfileBloc, GetProfileStateBase>(
+              builder: (context, state) {
+                if (state is GetProfileLoading) {
+                  return kCircularProgressIndicator;
+                } else if (state is GetProfileLoaded) {
+                  serviceProvider = state.serviceProviderProfileModel;
+                  return SizedBox(
+                    width: Get.width * 0.9,
+                    child: ListView(
+                      children: [
+                        _serviceProviderInfo(
+                            serviceProvider!.profilePicture ?? "",
+                            "${serviceProvider.user!.firstName} ${serviceProvider.user!.lastName!}",
+                            serviceProvider.user!.phoneNumber!,
+                            serviceProvider.streetAddress!),
+                        verticalSpacing20,
+                        _professionalProfile(serviceProvider.bio!),
+                        verticalSpacing20,
+                        serviceProvider.qualifications!.length == 0
+                            ? const SizedBox(
+                                height: 1,
+                                width: 1,
+                              )
+                            : _qualification(serviceProvider.qualifications!),
+                        verticalSpacing20,
+                        serviceProvider.serviceProviderLicense == null
+                            ? const SizedBox(
+                                height: 1,
+                                width: 1,
+                              )
+                            : _licenses(serviceProvider.serviceProviderLicense!),
+                        verticalSpacing20,
+                        serviceProvider.serviceProviderTherapies!.length == 0
+                            ? const SizedBox(
+                                height: 1,
+                                width: 1,
+                              )
+                            : _therapies(serviceProvider.serviceProviderTherapies!),
+                        verticalSpacing20,
+                        verticalSpacing20,
+                      ],
+                    ),
+                  );
+                } else if (state is GetProfileError) {
+                  return const Center(
+                    child: Text('Something went wrong!'),
+                  );
+                }
+                return Container();
               },
-              child: BlocBuilder<GetProfileBloc, GetProfileStateBase>(
-                builder: (context, state) {
-                  if (state is GetProfileLoading) {
-                    return kCircularProgressIndicator;
-                  } else if (state is GetProfileLoaded) {
-                    serviceProvider = state.serviceProviderProfileModel;
-                    return SizedBox(
-                      width: Get.width * 0.9,
-                      child: ListView(
-                        children: [
-                          _serviceProviderInfo(
-                              serviceProvider!.profilePicture ?? "",
-                              "${serviceProvider.user!.firstName} ${serviceProvider.user!.lastName!}",
-                              serviceProvider.user!.phoneNumber!,
-                              serviceProvider.streetAddress!),
-                          verticalSpacing20,
-                          _professionalProfile(serviceProvider.bio!),
-                          verticalSpacing20,
-                          serviceProvider.specializations!.length > 0
-                              ? _specialities(serviceProvider.specializations!)
-                              : const SizedBox(
-                                  height: 1,
-                                  width: 1,
-                                ),
-                          verticalSpacing20,
-                          serviceProvider.qualifications!.length == 0
-                              ? const SizedBox(
-                                  height: 1,
-                                  width: 1,
-                                )
-                              : _qualification(serviceProvider.qualifications!),
-                          verticalSpacing20,
-                          serviceProvider.serviceProviderLicense == null
-                              ? const SizedBox(
-                                  height: 1,
-                                  width: 1,
-                                )
-                              : _licenses(serviceProvider.serviceProviderLicense!),
-                          verticalSpacing20,
-                          serviceProvider.serviceProviderTherapies!.length == 0
-                              ? const SizedBox(
-                                  height: 1,
-                                  width: 1,
-                                )
-                              : _therapies(serviceProvider.serviceProviderTherapies!),
-                          verticalSpacing20,
-                          verticalSpacing20,
-                        ],
-                      ),
-                    );
-                  } else if (state is GetProfileError) {
-                    return const Center(
-                      child: Text('Something went wrong!'),
-                    );
-                  }
-                  return Container();
-                },
-              ),
             ),
           ),
         ),

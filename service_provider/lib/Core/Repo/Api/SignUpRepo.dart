@@ -9,7 +9,7 @@ class SignUpRepo extends RepoBase {
   final serviceProviderCreate = 'ServiceProvider/Create';
   final serviceProviderSpecialization = 'ServiceProviderSpecialization/Create';
   final serviceProviderTherapy = 'ServiceProviderTherapy/Create';
-  final serviceProviderAvilability = 'DboctorAvilability/Create';
+  final serviceProviderAvilability = 'ServiceProviderAvilability/Create';
   final setUpProfile = 'ServiceProvider/SetupProfile';
 
   Future<http.Response> setServiceProviderProfile(

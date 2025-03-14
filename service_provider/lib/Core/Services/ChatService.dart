@@ -110,7 +110,7 @@ class ChatService {
       }
     }
     List<ChatHeadChatUserModel> list = [];
-    if (model.users!.length > 0) {
+    if (model.users != null && model.users!.isNotEmpty) {
       for (var data in model.users!) {
         ChatHeadChatUserModel user = ChatHeadChatUserModel();
         var serviceProvider = await docservice.getServiceProvider(data.userId.toString());

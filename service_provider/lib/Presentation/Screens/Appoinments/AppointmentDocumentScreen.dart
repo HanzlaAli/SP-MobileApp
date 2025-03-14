@@ -2,7 +2,6 @@ import '../../../Data/Models/AppointmentDocument/AppointmentDocumentModel.dart';
 import '../../../Presentation/Bloc/AppointmentDocument/appointment_document_bloc.dart';
 import '../../../Presentation/Screens/ErrorHandling/InternalServerErrorScreen.dart';
 import '../../../Presentation/Widgets/MyAppBar.dart';
-import '../../../Presentation/Widgets/MyDrawer.dart';
 import '../../../Presentation/Widgets/MyTextButton.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +40,6 @@ class _AppointmentDocumentScreenState extends State<AppointmentDocumentScreen> {
         title: 'History',
         isDrawer: true,
       ),
-      drawer: const MyDrawer(),
       body: RefreshIndicator(
         color: kPrimaryColor,
         onRefresh: () async {

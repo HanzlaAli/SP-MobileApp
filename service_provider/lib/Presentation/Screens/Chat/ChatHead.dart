@@ -1,4 +1,7 @@
 // ignore_for_file: must_be_immutable, file_names
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../Core/Routes/Routes.dart';
 import '../../../Core/Services/ChatService.dart';
 import '../../../Data/Models/FireBaseUserModel/ChatHeadChatUserModel.dart';
@@ -6,9 +9,6 @@ import '../../../Presentation/Bloc/GetProfileBloc/get_profile_bloc.dart';
 import '../../../Presentation/Screens/Chat/Chat.dart';
 import '../../../Presentation/Screens/ErrorHandling/EmptyDataScreen.dart';
 import '../../../Presentation/Screens/ErrorHandling/InternalServerErrorScreen.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shimmer/shimmer.dart';
 import '../../Bloc/ThemeBloc/theme_bloc.dart';
 import '../../helper/Constants/MyColors.dart';
 import '../../helper/Constants/MyIcons.dart';
@@ -44,19 +44,18 @@ class _ChatHeadScreenState extends State<ChatHeadScreen> {
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: _appBar(context, state),
           body: RefreshIndicator(
             onRefresh: () async {
               service.getChatHead(
-                  currentUserId:
-                      getUserProfileLoaded!.serviceProviderProfileModel!.user!.id);
+                  currentUserId: getUserProfileLoaded!
+                      .serviceProviderProfileModel!.user!.id);
             },
             child: SizedBox(
               height: MediaQuery.of(context).size.height,
               child: FutureBuilder<List<ChatHeadChatUserModel>>(
                 future: service.getChatHead(
-                    currentUserId:
-                        getUserProfileLoaded!.serviceProviderProfileModel!.user!.id),
+                    currentUserId: getUserProfileLoaded!
+                        .serviceProviderProfileModel!.user!.id),
                 builder: (context, snapshot) {
                   // if (snapshot.connectionState == ConnectionState.waiting) {
                   //   return _shimmer(context);
@@ -200,36 +199,16 @@ class _ChatHeadScreenState extends State<ChatHeadScreen> {
           }),
     );
   }
-
-  PreferredSizeWidget _appBar(BuildContext context, ThemeState themeState) =>
-      AppBar(
-        backgroundColor:
-            themeState is DarkThemeState ? kBlackColor : kWhiteColor,
-        foregroundColor:
-            themeState is DarkThemeState ? kWhiteColor : kBlackColor,
-        leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: const Icon(Icons.arrow_back_ios_sharp)),
-        title: const Text(
-          'Chat',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-      );
 }
 
 class MyListTile extends StatelessWidget {
   ChatHeadChatUserModel model;
   int? senderId;
   MyListTile({
-    Key? key,
+    super.key,
     required this.model,
     this.senderId,
-  }) : super(key: key);
+  });
   ChatController chatController = ChatController();
   @override
   Widget build(BuildContext context) {
@@ -259,17 +238,12 @@ class MyListTile extends StatelessWidget {
       title: Text(model.userName ?? ""),
       subtitle: model.appointmentStartTime != null
           ? GestureDetector(
-              onTap: () => navigatorPushAndRemoveUntil(
-                  context,
-                  AppoinmentsScreen(
-                    fromDrawer: false,
-                  )),
-              child: Container(
-                child: Text(
-                  "${dateTimetoTimeConverter(model.appointmentStartTime!)} ${model.appointmentStartTime!.hour > 12 ? "PM" : "AM"}",
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, color: kPrimaryColor),
-                ),
+              onTap: () =>
+                  navigatorPushAndRemoveUntil(context, AppoinmentsScreen()),
+              child: Text(
+                "${dateTimetoTimeConverter(model.appointmentStartTime!)} ${model.appointmentStartTime!.hour > 12 ? "PM" : "AM"}",
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: kPrimaryColor),
               ),
             )
           : Text(model.lastMessage ?? "Tap to chat"),

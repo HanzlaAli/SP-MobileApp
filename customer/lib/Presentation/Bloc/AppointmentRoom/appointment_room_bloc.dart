@@ -22,23 +22,23 @@ class AppointmentRoomBloc
       Either<ErrorModel, UserModel> response = await serviceProviderController
           .getServiceProviderByIdFromFirebase(event.serviceProviderId.toString());
       if (response.isRight()) {
-        var model;
+        UserModel model;
         response.fold((l) => null, (r) {
           model = r;
         });
-        if (model != null && model.isActive == true) {
-          if (token != null) {
-            Either<ErrorModel, AppoinmentRoomResponseModel> res =
-                await controller.getRoomByAppointmentId(event.id!, token);
-            res.fold((l) => emit(AppointmentRoomError()),
-                (r) => emit(AppointmentRoomSuccess(model: r)));
-          } else {
-            emit(AppointmentRoomError());
-          }
-        } else {
-          emit(AppointmentRoomError(
-              model: ErrorModel(message: "User is Offline", code: 503)));
-        }
+        // if (model != null && model.isActive == true) {
+        //   if (token != null) {
+        //     Either<ErrorModel, AppoinmentRoomResponseModel> res =
+        //         await controller.getRoomByAppointmentId(event.id!, token);
+        //     res.fold((l) => emit(AppointmentRoomError()),
+        //         (r) => emit(AppointmentRoomSuccess(model: r)));
+        //   } else {
+        //     emit(AppointmentRoomError());
+        //   }
+        // } else {
+        //   emit(AppointmentRoomError(
+        //       model: ErrorModel(message: "User is Offline", code: 503)));
+        // }
       } else {
         emit(AppointmentRoomError());
       }

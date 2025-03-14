@@ -1,6 +1,5 @@
 import '../../../Presentation/Screens/ErrorHandling/InternalServerErrorScreen.dart';
 import '../../../Presentation/Widgets/MyAppBar.dart';
-import '../../../Presentation/Widgets/MyDrawer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +35,6 @@ class _AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
         title: 'History',
         isDrawer: true,
       ),
-      drawer: const MyDrawer(),
       body: RefreshIndicator(
         color: kPrimaryColor,
         onRefresh: () async {

@@ -1,12 +1,12 @@
 // ignore_for_file: file_names
 import 'package:connectivity_plus/connectivity_plus.dart';
-import '../../../Presentation/helper/Constants/Constants.dart';
-import '../../../Presentation/Bloc/AuthBloc/auth_bloc.dart';
-import '../../../Presentation/Screens/Splash/OnBoarding.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import '../../../Presentation/helper/Constants/Constants.dart';
+import '../../../Presentation/Bloc/AuthBloc/auth_bloc.dart';
+import '../../../Presentation/Screens/Splash/OnBoarding.dart';
 import '../../../Core/Routes/Routes.dart';
 import '../../helper/Constants/MyColors.dart';
 import '../../Bloc/AppOpenedBloc/app_opened_bloc.dart';
@@ -19,12 +19,16 @@ import '../User/LogIn/LogIn.dart';
 class SplashScreen extends StatefulWidget {
   static const routeName = '/splash';
   const SplashScreen({super.key});
-
+ 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
+
 class _SplashScreenState extends State<SplashScreen> {
+  
+  AuthStateBase? authState;
+
   @override
   void initState() {
     BlocProvider.of<AuthBloc>(context).add(isLoggedIn());
@@ -33,7 +37,6 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
   }
 
-  AuthStateBase? authState;
   void checkInternetConnectivity() {
     Connectivity().checkConnectivity().then((result) {
       if (result == ConnectivityResult.none) {
@@ -103,7 +106,7 @@ class _SplashScreenState extends State<SplashScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset('assets/Images/AppLogo.png',
-                  height: kIsWeb ? 400 : Get.height * 0.8),
+                  height: kIsWeb ? 400 : Get.height * 0.3),
             ],
           ),
         ),

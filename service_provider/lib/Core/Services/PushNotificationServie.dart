@@ -14,9 +14,9 @@ class PushNotificationService {
   }
 
   Future<void> setToken(String userId, String fcmToken) async {
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(userId)
-        .update({"FcmToken": fcmToken});
+    // await FirebaseFirestore.instance
+    //     .collection('Users')
+    //     .doc(userId)
+    //     .update({"FcmToken": fcmToken});
   }
 }

@@ -7,9 +7,10 @@ const appIconTag = "app-Icon";
 const apptitle = 'Mended Solutions Portal';
 const kMaximumWidgth = double.infinity;
 final themeData = ThemeData(fontFamily: "OpenSans");
+const String baseUrl = 'http://132.148.73.196:81/';
 
-const kRememberMeTextStyle = TextStyle(
-    color: kPrimaryColor, fontSize: 13, fontWeight: FontWeight.w700);
+const kRememberMeTextStyle =
+    TextStyle(color: kPrimaryColor, fontSize: 13, fontWeight: FontWeight.w700);
 
 const servicesWidgetRadius = BorderRadius.only(
   topLeft: Radius.circular(20),

@@ -1,5 +1,4 @@
 import '../../../Presentation/Widgets/MyAppBar.dart';
-import '../../../Presentation/Widgets/MyDrawer.dart';
 import 'package:flutter/material.dart';
 
 class AboutUsScreen extends StatelessWidget {
@@ -12,7 +11,6 @@ class AboutUsScreen extends StatelessWidget {
         title: 'About Us',
         isDrawer: false,
       ),
-      drawer: const MyDrawer(),
       body: const Center(
         child: Padding(
           padding: EdgeInsets.all(20.0),

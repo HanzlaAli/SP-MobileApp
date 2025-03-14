@@ -43,6 +43,7 @@ dependencies:
   get:
   page_transition:
   collapsible_sidebar:
+  cached_network_image:
   fluttertoast:
   otp_text_field:
   pin_code_fields:
@@ -58,6 +59,7 @@ dependencies:
   permission_handler:
   # agora_uikit:
   firebase_auth:
+  carousel_nerdzlab:
   firebase_storage:
   firebase_messaging:
   cloud_firestore:

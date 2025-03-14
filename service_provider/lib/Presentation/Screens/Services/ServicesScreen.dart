@@ -1,16 +1,14 @@
 // ignore_for_file: must_be_immutable, file_names
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../Presentation/helper/ReusedFunctions.dart';
 import '../../../Data/Models/ServicesModels/DeleteServicesModel.dart';
 import '../../../Presentation/Bloc/ServicesBloc/services_bloc.dart';
 import '../../../Presentation/Screens/ErrorHandling/EmptyDataScreen.dart';
 import '../../../Presentation/Screens/ErrorHandling/InternalServerErrorScreen.dart';
-import '../../../Presentation/Widgets/MyDrawer.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../Presentation/Widgets/MyAppBar.dart';
 import '../../../Presentation/Widgets/ServiceDetails.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:shimmer/shimmer.dart';
 import '../../Bloc/ThemeBloc/theme_bloc.dart';
 import '../../helper/Constants/MyColors.dart';
 import '../../../Data/Models/ServicesModels/GetServiceModel.dart';
@@ -55,8 +53,6 @@ class _ServiceScreenState extends State<ServiceScreen> {
         builder: (context, themestate) {
           return Scaffold(
             backgroundColor: kWhiteColor,
-            drawer: const MyDrawer(),
-            appBar: _aapBar(),
             body: RefreshIndicator(
               onRefresh: () async {
                 BlocProvider.of<ServicesBloc>(context).add(GetAllService());
@@ -126,12 +122,6 @@ class _ServiceScreenState extends State<ServiceScreen> {
     );
   }
 
-  MyAppBar _aapBar() {
-    return MyAppBar(
-      title: 'My Services',
-    );
-  }
-
   Widget _myListTileWidget(GetServicesModel? model, BuildContext context,
           ThemeState themestate) =>
       Dismissible(
@@ -157,10 +147,6 @@ class _ServiceScreenState extends State<ServiceScreen> {
           )),
           title: Text(model.name!),
           subtitle: Text('${model.charges}\$'),
-          trailing: Text(
-            '${model.numberOfTimesAvailable}x',
-            style: const TextStyle(fontSize: 16),
-          ),
         ),
       );
   SizedBox _shimmer(BuildContext context) {

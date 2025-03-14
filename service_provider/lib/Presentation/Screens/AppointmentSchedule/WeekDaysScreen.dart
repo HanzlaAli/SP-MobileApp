@@ -1,3 +1,5 @@
+import 'package:mended_soluctions/Presentation/Widgets/MyAppBar.dart';
+
 import '../../../Core/Routes/Routes.dart';
 import '../../../Presentation/Bloc/ServiceProviderAvailability/serviceProvider_availability_bloc.dart';
 import '../../../Presentation/Screens/AppointmentSchedule/EditSlotsScreen.dart';
@@ -45,6 +47,7 @@ class _WeekDayScreenState extends State<WeekDayScreen> {
   Widget build(BuildContext context) {
     final int columnCount = getCount(MediaQuery.of(context).size.width);
     return Scaffold(
+      appBar: !widget.isNew ? MyAppBar(title: 'Edit Time Slots') : null,
       body: SafeArea(
         child: BlocBuilder<ServiceProviderAvailabilityBloc, ServiceProviderAvailabilityState>(
           builder: (context, state) {
@@ -53,6 +56,7 @@ class _WeekDayScreenState extends State<WeekDayScreen> {
             } else if (state is ServiceProviderAvailabilityLoaded) {
               return Column(
                 children: [
+                  if(widget.isNew)
                   _appIcon(),
                   Expanded(
                     child: ListView.builder(
