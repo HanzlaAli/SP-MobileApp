@@ -1,6 +1,6 @@
 // ignore_for_file: file_names
 import '../../Presentation/Bloc/GetProfileBloc/get_profile_bloc.dart';
-import '../../Presentation/Screens/Services/ServicesScreen.dart';
+import '../Screens/Services/services_screen.dart';
 import '../../Presentation/Screens/User/LogIn/LogIn.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

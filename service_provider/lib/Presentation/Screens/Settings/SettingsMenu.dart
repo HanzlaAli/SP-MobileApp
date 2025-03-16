@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:mended_soluctions/Presentation/Screens/Home/order_history.dart';
 import 'package:mended_soluctions/Presentation/Screens/Profile/Profile.dart';
+import 'package:mended_soluctions/Presentation/Screens/complaint/complaint.dart';
 import 'package:mended_soluctions/Presentation/Widgets/MyAppBar.dart';
 import '../../../Core/Routes/Routes.dart';
 import '../../../Presentation/Screens/AboutUs/AboutUs.dart';
@@ -36,100 +37,102 @@ class SettingsMenuScreen extends StatelessWidget {
             backgroundColor:
                 themestate is DarkThemeState ? kBlackColor : kWhiteColor,
             appBar: MyAppBar(title: 'Settings'),
-            body: Container(
-              margin: const EdgeInsets.only(top: 5),
-              child: Column(children: [
-                ListItems(
-                  icon: Icons.person,
-                  onTap: () {
-                    navigatorPush(context, const ProfileScreen());
-                  },
-                  title: 'My Profile',
-                ),
-                ListItems(
-                  icon: Icons.history,
-                  onTap: () {
-                    navigatorPush(context, const AppointmentHistoryScreen());
-                  },
-                  title: 'Appointment History',
-                ),
-                ListItems(
-                  icon: Icons.done,
-                  onTap: () {
-                    navigatorPush(context, const OrderHistory());
-                  },
-                  title: 'My Orders',
-                ),
-                ListItems(
-                  icon: Icons.access_time_outlined,
-                  onTap: () {
-                    navigatorPush(
-                        context,
-                        WeekDayScreen(
-                          isNew: false,
-                        ));
-                  },
-                  title: 'Manage Availability',
-                ),
-                ListItems(
-                  icon: Icons.error,
-                  onTap: () {
-                    navigatorPush(context, const CustomerRequestScreen());
-                  },
-                  title: 'Complaints',
-                ),
-                ListItems(
-                  icon: Icons.lock,
-                  onTap: () {
-                    navigatorPush(context, ChangePasswordScreen());
-                  },
-                  title: 'Change Password',
-                ),
-                ListItems(
-                  icon: Icons.delete,
-                  onTap: () {
-                    navigatorPush(context, DeleteAccountScreen());
-                  },
-                  title: 'Delete Account',
-                ),
-                ListItems(
-                  icon: Icons.privacy_tip,
-                  onTap: () {
-                    navigatorPush(context, const PrivacyPolicyScreen());
-                  },
-                  title: 'Privacy Policy',
-                ),
-                ListItems(
-                  icon: Icons.file_copy_rounded,
-                  onTap: () {
-                    navigatorPush(context, const TermToUseScreen());
-                  },
-                  title: 'Terms Of Use',
-                ),
-                ListItems(
-                  icon: Icons.info,
-                  onTap: () {
-                    navigatorPush(context, const AboutUsScreen());
-                  },
-                  title: 'About Us',
-                ),
-                ListItems(
-                  icon: Icons.download,
-                  onTap: () {
-                    BlocProvider.of<GetDetailBloc>(context)
-                        .add(GetServiceProviderDetailEvent());
-                  },
-                  title: 'Download your information',
-                ),
-                ListItems(
-                  icon: Icons.logout,
-                  onTap: () {
-                    BlocProvider.of<LogOutBloc>(context).add(LogOutEvent());
-                    navigatorPushAndRemoveUntil(context, const LogInScreen());
-                  },
-                  title: 'Log Out',
-                ),
-              ]),
+            body: SingleChildScrollView(
+              child: Container(
+                margin: const EdgeInsets.only(top: 5),
+                child: Column(children: [
+                  ListItems(
+                    icon: Icons.person,
+                    onTap: () {
+                      navigatorPush(context, const ProfileScreen());
+                    },
+                    title: 'My Profile',
+                  ),
+                  ListItems(
+                    icon: Icons.history,
+                    onTap: () {
+                      navigatorPush(context, const AppointmentHistoryScreen());
+                    },
+                    title: 'Appointment History',
+                  ),
+                  ListItems(
+                    icon: Icons.done,
+                    onTap: () {
+                      navigatorPush(context, const OrderHistory());
+                    },
+                    title: 'My Orders',
+                  ),
+                  ListItems(
+                    icon: Icons.access_time_outlined,
+                    onTap: () {
+                      navigatorPush(
+                          context,
+                          WeekDayScreen(
+                            isNew: false,
+                          ));
+                    },
+                    title: 'Manage Availability',
+                  ),
+                  ListItems(
+                    icon: Icons.error,
+                    onTap: () {
+                      navigatorPush(context, const ComplaintScreen());
+                    },
+                    title: 'Complaints',
+                  ),
+                  ListItems(
+                    icon: Icons.lock,
+                    onTap: () {
+                      navigatorPush(context, ChangePasswordScreen());
+                    },
+                    title: 'Change Password',
+                  ),
+                  ListItems(
+                    icon: Icons.delete,
+                    onTap: () {
+                      navigatorPush(context, DeleteAccountScreen());
+                    },
+                    title: 'Delete Account',
+                  ),
+                  ListItems(
+                    icon: Icons.privacy_tip,
+                    onTap: () {
+                      navigatorPush(context, const PrivacyPolicyScreen());
+                    },
+                    title: 'Privacy Policy',
+                  ),
+                  ListItems(
+                    icon: Icons.file_copy_rounded,
+                    onTap: () {
+                      navigatorPush(context, const TermToUseScreen());
+                    },
+                    title: 'Terms Of Use',
+                  ),
+                  ListItems(
+                    icon: Icons.info,
+                    onTap: () {
+                      navigatorPush(context, const AboutUsScreen());
+                    },
+                    title: 'About Us',
+                  ),
+                  ListItems(
+                    icon: Icons.download,
+                    onTap: () {
+                      BlocProvider.of<GetDetailBloc>(context)
+                          .add(GetServiceProviderDetailEvent());
+                    },
+                    title: 'Download your information',
+                  ),
+                  ListItems(
+                    icon: Icons.logout,
+                    onTap: () {
+                      BlocProvider.of<LogOutBloc>(context).add(LogOutEvent());
+                      navigatorPushAndRemoveUntil(context, const LogInScreen());
+                    },
+                    title: 'Log Out',
+                  ),
+                ]),
+              ),
             ),
           );
         },

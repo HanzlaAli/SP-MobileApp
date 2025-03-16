@@ -1,4 +1,4 @@
-import '../../../Data/service_type/service_type_model.dart';
+import '../../../Data/Models/service_type/service_type_model.dart';
 
 sealed class ServiceTypeState {}
 

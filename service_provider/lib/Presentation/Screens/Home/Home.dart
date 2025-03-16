@@ -9,7 +9,7 @@ import '../../Bloc/GetServiceProviderAppoinments/get_serviceProvider_appoinments
 import '../../Bloc/TransactionBloc/transaction_bloc.dart';
 import '../Appoinments/GetAllAppoinments.dart';
 import '../CustomerRequests/customer_request.dart';
-import '../Services/ServicesScreen.dart';
+import '../Services/services_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

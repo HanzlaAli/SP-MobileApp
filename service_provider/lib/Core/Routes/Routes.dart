@@ -1,6 +1,6 @@
 // ignore_for_file: file_names
 import '../../Presentation/Screens/Appoinments/GetAllAppoinments.dart';
-import '../../Presentation/Screens/Services/ServicesScreen.dart';
+import '../../Presentation/Screens/Services/services_screen.dart';
 import '../../Presentation/Screens/Profile/Profile.dart';
 import '../../Presentation/Screens/Splash/OnBoarding.dart';
 import '../../Presentation/Screens/User/ForgetPassword/ForgetPassword.dart';

@@ -15,7 +15,6 @@ class ComplaintBloc extends Bloc<ComplaintEvent, ComplaintState> {
 
   ComplaintBloc() : super(ComplaintInitial()) {
     on<CreateComplaintEvent>((event, emit) async {
-      emit(ComplaintLoading());
       String? token = await sharedPrefrenceController.getToken();
 
       if (token != null) {

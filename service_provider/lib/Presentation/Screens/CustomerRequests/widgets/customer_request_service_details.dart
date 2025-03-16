@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../../../Data/Models/CustomerRequestModels/customer_request_service_model.dart';
+import '../../../Widgets/my_network_images.dart';
 import '../../../helper/Constants/MyColors.dart';
+import '../../../helper/ReusedFunctions.dart';
 import 'customer_request_list_items.dart';
 
-class ListItems extends StatelessWidget {
-  ListItems({super.key, required this.model, required this.onTap});
+class CustomerRequestListItems extends StatelessWidget {
+  CustomerRequestListItems(
+      {super.key, required this.model, required this.onTap});
   CustomerRequestServiceModel model;
   void Function()? onTap;
   @override
@@ -23,8 +26,16 @@ class ListItems extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundImage: NetworkImage(
-                    '${model.user?.profilePicture}',
+                  child: ClipOval(
+                    child: Container(
+                      color: Colors.white,
+                      child: MyNetworkImage(
+                        imagePath: '${model.user?.profilePicture}',
+                        height: 40,
+                        width: 40,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
                   ),
                 ),
                 Column(
@@ -55,12 +66,17 @@ class ListItems extends StatelessWidget {
                                 color: kBlackColor,
                                 size: 10,
                               ),
-                              Text(
-                                '${model.user?.phoneNumber}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: kBlackColor,
-                                    fontSize: 10),
+                              GestureDetector(
+                                onTap: () => launchDialPad(
+                                  model.user?.phoneNumber ?? '',
+                                ),
+                                child: Text(
+                                  '${model.user?.phoneNumber}',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: kBlackColor,
+                                      fontSize: 10),
+                                ),
                               )
                             ],
                           ),

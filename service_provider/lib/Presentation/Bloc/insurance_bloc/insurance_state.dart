@@ -12,6 +12,12 @@ final class InsuranceLoaded extends InsuranceState {
   InsuranceLoaded({required this.model});
 }
 
+final class InsuranceSuccess extends InsuranceState {
+  final SuccessModel model;
+
+  InsuranceSuccess({required this.model});
+}
+
 final class InsuranceError extends InsuranceState {
   final ErrorModel errorModel;
 

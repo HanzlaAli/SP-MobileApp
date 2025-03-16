@@ -11,11 +11,19 @@ class CustomerRequestService {
   Future<Either<ErrorModel, List<CustomerRequestServiceModel>>>
       getCustomerRequestedServices(
           String token, String? filter, int? serviceTypeId) async {
-    http.Response response = await _customerRequestRepo.get(
-        url: filter == null
-            ? _customerRequestRepo.getAllCustomerRequestPath
-            : '${_customerRequestRepo.getAllCustomerRequestPath}?filter=$filter&serviceTypeId=$serviceTypeId',
-        token: token);
+    String url = _customerRequestRepo.getAllCustomerRequestPath;
+    
+    if (filter != null && filter.isNotEmpty) {
+      url += '?filter=$filter';
+      if (serviceTypeId != null) {
+        url += '&serviceTypeId=$serviceTypeId';
+      } 
+    } else if (serviceTypeId != null) {
+      url += '?serviceTypeId=$serviceTypeId';
+    }
+
+    http.Response response =
+        await _customerRequestRepo.get(url: url, token: token);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       List res = jsonDecode(response.body);

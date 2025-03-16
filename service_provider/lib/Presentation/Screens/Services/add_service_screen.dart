@@ -1,29 +1,21 @@
 // ignore_for_file: must_be_immutable, file_names
-//import 'package:date_time_picker/date_time_picker.dart';
-import 'package:date_time_picker/date_time_picker.dart';
+import 'dart:ui';
 import 'package:image_picker/image_picker.dart';
-import '../../../Presentation/helper/ReusedFunctions.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import '../../../Data/Models/ServicesModels/create_or_edit_service_model.dart';
 import '../../../Data/Models/TherapyModels/GetServiceProviderTherapyModel.dart';
 import '../../../Presentation/Bloc/GetServiceProviderTherapiesBloc/get_serviceProvider_therapies_bloc.dart';
 import '../../../Presentation/Bloc/ServicesBloc/services_bloc.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dart:ui';
 import '../../../Presentation/helper/Constants/Constants.dart';
 import '../../../Presentation/Widgets/MyButton.dart';
 import '../../../Presentation/Widgets/MyTextFieldWithNoLogo.dart';
-import 'package:flutter/material.dart';
-// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart'
-//     as dt_picker;
-import 'package:get/get.dart';
 import '../../Widgets/MyTextButton.dart';
 import '../../helper/Constants/MyColors.dart';
-import '../../helper/Constants/MySpaces.dart';
 import '../../../Data/Models/ServicesModels/GetServiceModel.dart';
 import '../../Widgets/MyDropdownWithNoLogo.dart';
-import '../../helper/Constants/MyTextFieldsStyling.dart';
 
 class AddServices extends StatefulWidget {
   GetServicesModel? model;
@@ -87,7 +79,6 @@ class _AddServicesState extends State<AddServices> {
                           : 'Add New Services'),
                   _nameTextField(),
                   _serviceTypeTextBox(),
-                  _chargesTextField(),
                   _chargesTextField(),
                   _discountTextField(),
                   _descriptionTextField(),
@@ -198,7 +189,7 @@ class _AddServicesState extends State<AddServices> {
           charges: double.tryParse(chargesController.text) ?? 0.0,
           name: nameController.text,
           validTill: DateTime.now(),
-          description: '',
+          description: descriptionController.text,
           serviceProviderServiceTypeId: getServiceProviderServiceModel?.id ?? 0,
           serviceProviderEmail: '',
           discount: double.tryParse(discountController.text) ?? 0.0,
@@ -218,7 +209,7 @@ class _AddServicesState extends State<AddServices> {
         }
         return '';
       },
-      hintText: 'No of times avalible',
+      hintText: 'Dicount',
     );
   }
 

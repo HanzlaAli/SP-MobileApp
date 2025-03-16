@@ -2,6 +2,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../Data/Models/insurance_model/insurance_model.dart';
 import '../../../Presentation/Bloc/GetProfileBloc/get_profile_bloc.dart';
 import '../../../Presentation/Widgets/ServiceProviderLicenseDetails.dart';
 import '../../../Presentation/helper/Constants/Constants.dart';
@@ -9,14 +10,15 @@ import '../../../Presentation/Widgets/MyAppBar.dart';
 import '../../../Core/Routes/Routes.dart';
 import '../../Bloc/AddServiceProviderLicenseBloc/add_serviceProvider_license_bloc.dart';
 import '../../Bloc/AddServiceProviderTherapyBloc/add_serviceProvider_therapy_bloc.dart';
+import '../../Bloc/insurance_bloc/insurance_bloc.dart';
 import '../../helper/Constants/MyColors.dart';
 import '../../helper/Constants/MyIcons.dart';
 import '../../helper/Constants/MySpaces.dart';
 import '../../../Data/Models/ProfileModels/ServiceProviderProfileModel.dart';
 import '../../Bloc/GetServiceProviderLicenseTypeBloc/get_serviceProvider_license_types_bloc.dart';
-import '../../Bloc/GetServiceProviderSpecializationBloc/get_serviceProvider_specialization_bloc.dart';
 import '../../Bloc/GetServiceProviderTherapyTypesBloc/get_therapy_types_bloc.dart';
 import '../../Widgets/MyIconWithText.dart';
+import '../../helper/ReusedFunctions.dart';
 import 'EditProfile.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -28,23 +30,30 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  InsuranceModel model = InsuranceModel();
+
   @override
   void initState() {
-    BlocProvider.of<GetProfileBloc>(context).add(GetServiceProviderProfileEvent());
+    BlocProvider.of<GetProfileBloc>(context)
+        .add(GetServiceProviderProfileEvent());
 
+    BlocProvider.of<InsuranceBloc>(context).add(GetInsurance());
     super.initState();
   }
 
   var serviceProvider;
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AddServiceProviderTherapyBloc, AddServiceProviderTherapyStateBase>(
+    return BlocListener<AddServiceProviderTherapyBloc,
+        AddServiceProviderTherapyStateBase>(
       listener: (context, state) {
         if (state is AddServiceProviderTherapySuccess) {
-          BlocProvider.of<GetProfileBloc>(context).add(GetServiceProviderProfileEvent());
+          BlocProvider.of<GetProfileBloc>(context)
+              .add(GetServiceProviderProfileEvent());
         }
       },
-      child: BlocListener<AddServiceProviderLicenseBloc, AddServiceProviderLicenseStateBase>(
+      child: BlocListener<AddServiceProviderLicenseBloc,
+          AddServiceProviderLicenseStateBase>(
         listener: (context, state) {
           if (state is AddServiceProviderLicenseSuccess) {
             BlocProvider.of<GetProfileBloc>(context)
@@ -59,6 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     context,
                     EditProfile(
                       serviceProviderProfileModel: serviceProvider,
+                      insuranceModel: model,
                     ));
                 BlocProvider.of<GetServiceProviderLicenseTypesBloc>(context)
                     .add(const GetServiceProviderLicenseTypesEvent());
@@ -111,14 +121,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 height: 1,
                                 width: 1,
                               )
-                            : _licenses(serviceProvider.serviceProviderLicense!),
+                            : _licenses(
+                                serviceProvider.serviceProviderLicense!),
                         verticalSpacing20,
                         serviceProvider.serviceProviderTherapies!.length == 0
                             ? const SizedBox(
                                 height: 1,
                                 width: 1,
                               )
-                            : _therapies(serviceProvider.serviceProviderTherapies!),
+                            : _therapies(
+                                serviceProvider.serviceProviderTherapies!),
+                        verticalSpacing20,
+                        _insurance(),
                         verticalSpacing20,
                         verticalSpacing20,
                       ],
@@ -138,8 +152,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _serviceProviderInfo(String serviceProviderProfile, String serviceProviderName,
-          String serviceProviderSpecialization, String serviceProviderAddress) =>
+  Widget _serviceProviderInfo(
+          String serviceProviderProfile,
+          String serviceProviderName,
+          String serviceProviderSpecialization,
+          String serviceProviderAddress) =>
       Container(
         margin: const EdgeInsets.only(top: 15, left: 10),
         padding: const EdgeInsets.only(left: 5),
@@ -231,32 +248,83 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
 
-  Widget _specialities(List<Specializations> specializations) => Container(
-        margin: const EdgeInsets.only(left: 20),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: kWhiteColor,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            MyIconWithText(text: 'Specialities'),
-            verticalSpacing10,
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: specializations
-                  .map(
-                    (specialization) =>
-                        SpecialitiesWidget(text: specialization.name ?? ""),
-                  )
-                  .toList(),
-            ),
-          ],
-        ),
+  Widget _insurance() => BlocBuilder<InsuranceBloc, InsuranceState>(
+        builder: (context, state) {
+          if (state is InsuranceLoaded && state.model != null) {
+            var model = state.model;
+            this.model = state.model;
+            return Container(
+              margin: const EdgeInsets.only(left: 20),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: kWhiteColor,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  MyIconWithText(text: 'Specialities'),
+                  verticalSpacing10,
+                  Column(
+                      spacing: 5,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildCustomerDetailsRow(
+                          'Insurance Type',
+                          getInsuranceTypeString(
+                            model.insuranceType,
+                          ),
+                        ),
+                        _buildCustomerDetailsRow(
+                          'Coverage Details',
+                          model.coverageDetails.toString(),
+                        ),
+                        _buildCustomerDetailsRow(
+                          'Start Date',
+                          model.startDate.toString(),
+                        ),
+                        _buildCustomerDetailsRow(
+                          'Expiry Date',
+                          model.expiryDate.toString(),
+                        ),
+                        _buildCustomerDetailsRow(
+                          'Provider Name',
+                          model.insuranceProviderName.toString(),
+                        ),
+                        _buildCustomerDetailsRow(
+                          'Policy Number',
+                          model.policyNumber.toString(),
+                        ),
+                        _buildCustomerDetailsRow(
+                          'Coverage Limit',
+                          model.coverageLimit.toString(),
+                        ),
+                        _buildCustomerDetailsRow(
+                          'Deductible',
+                          model.deductible.toString(),
+                        ),
+                      ]),
+                ],
+              ),
+            );
+          }
+          return const SizedBox();
+        },
       );
+
+  _buildCustomerDetailsRow(String key, String value) {
+    return Row(
+      children: [
+        Text(
+          '$key: ',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        Text(value)
+      ],
+    );
+  }
 
   // Widget _awards() => Container(
   Widget _qualification(List<Qualifications> qualification) => Container(
@@ -277,16 +345,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Expanded(
               child: ListView.builder(
                   itemCount: qualification.length,
-                  itemBuilder: (context, index) => ServiceProviderEducationWidget(
-                      serviceProviderEducation: qualification[index].institutionName!)),
+                  itemBuilder: (context, index) =>
+                      ServiceProviderEducationWidget(
+                          serviceProviderEducation:
+                              qualification[index].institutionName!)),
             ),
           ],
         ),
       );
 
-  Widget _licenses(ServiceProviderLicense serviceProviderLicenses) => GestureDetector(
-        onTap: () =>
-            Get.dialog(ServiceProviderLicenseDetails(serviceProviderLicense: serviceProviderLicenses)),
+  Widget _licenses(ServiceProviderLicense serviceProviderLicenses) =>
+      GestureDetector(
+        onTap: () => Get.dialog(ServiceProviderLicenseDetails(
+            serviceProviderLicense: serviceProviderLicenses)),
         child: Container(
           margin: const EdgeInsets.only(left: 20),
           padding: const EdgeInsets.all(15),
@@ -326,7 +397,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
 
-  Widget _therapies(List<ServiceProviderTherapies> serviceProviderTherapies) => Container(
+  Widget _therapies(List<ServiceProviderTherapies> serviceProviderTherapies) =>
+      Container(
         margin: const EdgeInsets.only(left: 20),
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(

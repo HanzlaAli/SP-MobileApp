@@ -46,18 +46,18 @@ dependencies:
   cached_network_image:
   fluttertoast:
   otp_text_field:
+  bottom_picker:
   pin_code_fields:
   carousel_slider:
   shared_preferences:
+  url_launcher:
   shimmer:
   intl:
   image_picker:
   dot_navigation_bar:
   syncfusion_flutter_calendar:
-  # agora_rtc_engine:
   firebase_pagination:
   permission_handler:
-  # agora_uikit:
   firebase_auth:
   carousel_nerdzlab:
   firebase_storage:
@@ -67,7 +67,6 @@ dependencies:
   chat_bubbles:
   firebase_core_web:
   hive:
-  # flutter_datetime_picker:
   date_time_picker:
   connectivity_plus:
   flutter_local_notifications:

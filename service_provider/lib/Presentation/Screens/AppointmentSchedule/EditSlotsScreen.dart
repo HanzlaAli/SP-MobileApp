@@ -1,4 +1,7 @@
+import 'package:bottom_picker/bottom_picker.dart';
+import 'package:bottom_picker/resources/arrays.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:mended_soluctions/Presentation/Widgets/MyButton.dart';
 import '../../../Presentation/Widgets/MyAppBar.dart';
 import '../../../Presentation/Widgets/MyTextButton.dart';
 import '../../../Presentation/Widgets/MyTextFieldWithNoLogo.dart';
@@ -93,7 +96,8 @@ class _EditSlotsScreenState extends State<EditSlotsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ServiceProviderAvailabilityBloc, ServiceProviderAvailabilityState>(
+    return BlocListener<ServiceProviderAvailabilityBloc,
+        ServiceProviderAvailabilityState>(
       listener: (context, state) {
         if (state is ServiceProviderAvailabilityLoading) {
           Get.snackbar("Loading...", "Please wait");
@@ -118,7 +122,7 @@ class _EditSlotsScreenState extends State<EditSlotsScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ...columns,
-            MyTextButton(
+            MyButton(
               onPressed: () {
                 ids.isNotEmpty ? update() : submit();
                 Future.delayed(
@@ -129,8 +133,10 @@ class _EditSlotsScreenState extends State<EditSlotsScreen> {
                   },
                 );
               },
-              text: 'Save',
-              color: kPrimaryColor,
+              buttonText: 'Save',
+              bgColor: kPrimaryColor,
+              fontColor: kWhiteColor,
+              width: MediaQuery.of(context).size.width * 0.9,
             ),
           ],
         ),
@@ -160,9 +166,11 @@ class _EditSlotsScreenState extends State<EditSlotsScreen> {
   }
 
   void update() {
-    List<updateAvailability.ServiceProviderAvailability> serviceProviderAvailabilities = [];
+    List<updateAvailability.ServiceProviderAvailability>
+        serviceProviderAvailabilities = [];
     for (int i = 0; i < ids.length; i++) {
-      var serviceProviderAvailability = updateAvailability.ServiceProviderAvailability(
+      var serviceProviderAvailability =
+          updateAvailability.ServiceProviderAvailability(
         id: ids[i],
         dayOfWeek: widget.weekDay,
         endTime: "${toController[i].text}:00",
@@ -274,20 +282,31 @@ class _BuildTimeSlotContainerState extends State<BuildTimeSlotContainer> {
           onTap: () {
             widget.fromController.text =
                 dateTimetoTimeConverter(DateTime.now());
-            // DatePicker.showTime12hPicker(context,
-            //     theme: const dt_picker.DatePickerTheme(
-            //       containerHeight: 210.0,
-            //     ),
-            //     onChanged: (time) {
-            //       widget.fromController.text = dateTimetoTimeConverter(time);
-            //     },
-            //     showTitleActions: true,
-            //     onConfirm: (date) {
-            //       widget.fromController.text = dateTimetoTimeConverter(date);
-            //       setState(() {});
-            //     },
-            //     currentTime: DateTime.now(),
-            //     locale: LocaleType.en);
+            BottomPicker.time(
+              pickerTitle: const Text(
+                'Set your availability',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: kPrimaryColor,
+                ),
+              ),
+              onSubmit: (time) {
+                widget.fromController.text = dateTimetoTimeConverter(time);
+                setState(() {});
+              },
+              onCloseButtonPressed: () {
+                print('Picker closed');
+              },
+              bottomPickerTheme: BottomPickerTheme.temptingAzure,
+              use24hFormat: true,
+              initialTime: Time(
+                minutes: DateTime.now().minute,
+              ),
+              maxTime: Time(
+                hours: DateTime.now().hour,
+              ),
+            ).show(context);
           },
           textEditingController: widget.fromController,
           validator: (val) {},
@@ -323,16 +342,29 @@ class _BuildTimeSlotContainerState extends State<BuildTimeSlotContainer> {
           hintText: 'To',
           readOnly: true,
           onTap: () {
-            // DatePicker.showTime12hPicker(context,
-            //     theme: const dt_picker.DatePickerTheme(
-            //       containerHeight: 210.0,
-            //     ),
-            //     showTitleActions: true, onChanged: (time) {
-            //   widget.toController.text = dateTimetoTimeConverter(time);
-            // }, onConfirm: (date) {
-            //   widget.toController.text = dateTimetoTimeConverter(date);
-            //   setState(() {});
-            // }, currentTime: DateTime.now(), locale: LocaleType.en);
+            BottomPicker.time(
+              pickerTitle: const Text(
+                'Set your availability',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: kPrimaryColor,
+                ),
+              ),
+              onSubmit: (time) {
+                widget.toController.text = dateTimetoTimeConverter(time);
+                setState(() {});
+              },
+              onCloseButtonPressed: () {},
+              bottomPickerTheme: BottomPickerTheme.temptingAzure,
+              use24hFormat: true,
+              initialTime: Time(
+                minutes: DateTime.now().minute,
+              ),
+              maxTime: Time(
+                hours: DateTime.now().hour,
+              ),
+            ).show(context);
           },
           textEditingController: widget.toController,
           validator: (val) {},

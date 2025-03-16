@@ -1,12 +1,17 @@
 // ignore_for_file: file_names
 
+import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mended_soluctions/Presentation/helper/enums/insurance_type.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../firebase_options.dart';
+import 'Constants/Constants.dart';
 import 'LocalNotificationsInitialization.dart';
+import 'enums/complaint_status.dart';
 
 void localNotificationInit(BuildContext context) {
   LocalNotificationService.initialize(context);
@@ -45,8 +50,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   );
 }
 
-String dateTimetoDateConverter(DateTime dateTime) {
-  return DateFormat('yyyy-dd-MM').format(dateTime);
+String dateTimetoDateConverter(DateTime dateTime, {String format = 'yyyy-dd-MM'}) {
+  return DateFormat(format).format(dateTime);
 }
 
 String dateTimetoTimeConverter(DateTime dateTime) {
@@ -107,5 +112,46 @@ String dateFormatter(String dateTime) {
     }
   } else {
     return DateFormat('dd-MM').format(date);
+  }
+}
+
+Future<void> launchDialPad(String phoneNo) async {
+  final Uri launchUri = Uri(scheme: 'tel', path: phoneNo);
+  await launchUrl(launchUri);
+}
+
+List<String> getImages(String image) {
+  var images = image.split(';').map((img) => '$baseUrl$img').toList();
+  return images;
+}
+
+String getComplaintStatusString(int status) {
+  if (status < 0 || status >= ComplaintStatus.values.length + 1) {
+    return 'Unknown';
+  }
+  switch (status) {
+    case 1:
+      return 'Open';
+    case 2:
+      return 'InProgress';
+    case 3:
+      return 'Closed';
+    default:
+      return 'Unknown';
+  }
+}
+
+String getInsuranceTypeString(int? type) {
+  switch (type) {
+    case 0:
+      return 'General Liability Insurance';
+    case 1:
+      return 'Workers Compensation Insurance';
+    case 2:
+      return 'Professional Liability Insurance';
+    case 3:
+      return 'Tools And Equipment Insurance';
+    default:
+      return 'Unknown';
   }
 }

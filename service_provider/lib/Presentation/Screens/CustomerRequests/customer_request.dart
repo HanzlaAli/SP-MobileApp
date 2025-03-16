@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:mended_soluctions/Core/Routes/Routes.dart';
+import 'customer_request_detail_screen.dart';
+import 'widgets/customer_request_service_details.dart';
+import 'widgets/filter_bottom_sheet.dart';
+import '../../../Data/Models/service_type/service_type_model.dart';
 import '../../Bloc/get_customer_service_request_bloc/get_customer_service_request_bloc.dart';
 import '../../helper/Constants/MyColors.dart';
 import '../ErrorHandling/EmptyDataScreen.dart';
 import '../ErrorHandling/InternalServerErrorScreen.dart';
-import 'customer_request_detail_screen.dart';
-import 'widgets/customer_request_service_details.dart';
 
 class CustomerRequestScreen extends StatefulWidget {
   const CustomerRequestScreen({super.key});
@@ -16,6 +19,7 @@ class CustomerRequestScreen extends StatefulWidget {
 }
 
 class _CustomerRequestScreenState extends State<CustomerRequestScreen> {
+  ServiceTypeModel? serviceType;
   @override
   void initState() {
     context
@@ -31,7 +35,6 @@ class _CustomerRequestScreenState extends State<CustomerRequestScreen> {
       body: Column(
         children: [
           // Search Box
-
           Row(
             children: [
               Expanded(
@@ -59,15 +62,24 @@ class _CustomerRequestScreenState extends State<CustomerRequestScreen> {
                     onChanged: (value) {
                       setState(() {
                         context.read<GetCustomerServiceRequestBloc>().add(
-                            GetAllCustomerServiceRequestByCustomerEvent(
-                                filter: value));
+                              GetAllCustomerServiceRequestByCustomerEvent(
+                                filter: value,
+                                serviceTypeId: serviceType?.id,
+                              ),
+                            );
                       });
                     },
                   ),
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.bottomSheet(FilterServices(
+                    onDataReceived: (serviceType) {
+                      this.serviceType = serviceType;
+                    },
+                  ));
+                },
                 icon: const Icon(
                   Icons.filter_alt_rounded,
                   color: kSecondaryColor,
@@ -98,7 +110,7 @@ class _CustomerRequestScreenState extends State<CustomerRequestScreen> {
                         itemCount: state.model.length,
                         itemBuilder: (context, index) {
                           final customerRequest = state.model[index];
-                          return ListItems(
+                          return CustomerRequestListItems(
                             model: customerRequest,
                             onTap: () {
                               navigatorPush(

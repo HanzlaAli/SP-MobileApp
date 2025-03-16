@@ -1,25 +1,27 @@
 // ignore_for_file: must_be_immutable, file_names
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../helper/Constants/MyColors.dart';
 import '../helper/Constants/MyTextFieldsStyling.dart';
 
 class MyDropDownTextFieldwithNoLogo extends StatelessWidget {
-  MyDropDownTextFieldwithNoLogo(
-      {Key? key,
-      this.focusNode,
-      this.items,
-      this.value,
-      this.hintText,
-      this.onChanged,
-      this.onFieldSubmitted,
-      this.fillColor = Colors.black12,
-      this.textInputColor = kBlackColor45,
-      required this.validator})
-      : super(key: key);
+  MyDropDownTextFieldwithNoLogo({
+    super.key,
+    this.focusNode,
+    this.items,
+    this.value,
+    this.hintText,
+    this.onChanged,
+    this.onFieldSubmitted,
+    this.fillColor = Colors.black12,
+    this.textInputColor = kBlackColor45,
+    this.width,
+    required this.validator,
+  });
+
   Color textInputColor;
   String? hintText;
+  double? width;
   void Function(String)? onFieldSubmitted;
   FocusNode? focusNode;
   String? Function(Object?)? validator;
@@ -30,7 +32,7 @@ class MyDropDownTextFieldwithNoLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: Get.width * 0.8,
+      width: width ?? Get.width * 0.8,
       child: DropdownButtonFormField(
         value: value,
         validator: validator,

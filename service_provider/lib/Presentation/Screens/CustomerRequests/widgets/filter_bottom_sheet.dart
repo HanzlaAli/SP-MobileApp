@@ -1,11 +1,10 @@
 // ignore_for_file: must_be_immutable, file_names
 import 'dart:ui';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mended_soluctions/Presentation/Bloc/get_customer_service_request_bloc/get_customer_service_request_bloc.dart';
-import '../../../../Data/service_type/service_type_model.dart';
+import '../../../../Data/Models/service_type/service_type_model.dart';
 import '../../../Bloc/service_type_bloc/service_type_bloc.dart';
 import '../../../Bloc/service_type_bloc/service_type_event.dart';
 import '../../../Bloc/service_type_bloc/service_type_state.dart';
@@ -17,7 +16,7 @@ import '../../../helper/Constants/MySpaces.dart';
 
 class FilterServices extends StatefulWidget {
   const FilterServices({super.key, required this.onDataReceived});
-  final void Function(ServiceTypeModel therapy) onDataReceived;
+  final void Function(ServiceTypeModel serviceType) onDataReceived;
   @override
   State<FilterServices> createState() => _FilterServicesState();
 }
@@ -25,28 +24,8 @@ class FilterServices extends StatefulWidget {
 class _FilterServicesState extends State<FilterServices> {
   @override
   void initState() {
-    ftoast.init(context);
-
     BlocProvider.of<ServiceTypeBloc>(context).add(GetServiceType());
     super.initState();
-  }
-
-  FToast ftoast = FToast();
-  void showToast(String msg) {
-    ftoast.showToast(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25.0),
-          color: kWhiteColor,
-        ),
-        child: Text(
-          msg,
-          style:
-              const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
   }
 
   ServiceTypeModel? serviceTypeModel;
@@ -61,7 +40,7 @@ class _FilterServicesState extends State<FilterServices> {
       filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
       child: SizedBox(
         width: double.infinity,
-        height: Get.height * 0.3,
+        height: Get.height * 0.25,
         child: Card(
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -104,7 +83,7 @@ class _FilterServicesState extends State<FilterServices> {
           Expanded(
             child: MyButton(
               onPressed: () => submit(),
-              fontColor: kPrimaryColor,
+              fontColor: kWhiteColor,
               buttonText: 'Done',
             ),
           ),
@@ -138,8 +117,9 @@ class _FilterServicesState extends State<FilterServices> {
           if (state is ServiceTypeLoadingState) {
           } else if (state is ServiceTypeLoadedState) {
             return MyDropDownTextFieldwithNoLogo(
-              hintText: 'Therapy Type',
-              value: ServiceTypeModel,
+              hintText: 'Service Type',
+              width: MediaQuery.of(context).size.width,
+              value: serviceTypeModel,
               validator: (val) {
                 return null;
               },
@@ -152,7 +132,7 @@ class _FilterServicesState extends State<FilterServices> {
               items: state.model?.map((val) {
                 return DropdownMenuItem<ServiceTypeModel>(
                   value: val,
-                  child: Text(val.name!),
+                  child: Text(val.name ?? ""),
                 );
               }).toList(),
             );

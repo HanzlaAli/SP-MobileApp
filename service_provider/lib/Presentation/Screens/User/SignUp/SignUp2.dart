@@ -1,22 +1,20 @@
 // ignore_for_file: file_names
 
 import 'dart:io';
-// import 'package:date_time_picker/date_time_picker.dart';
+import 'package:bottom_picker/bottom_picker.dart';
+import 'package:bottom_picker/resources/arrays.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../../Data/Models/ProfileModels/SetUpProfileModel.dart';
 import '../../../../Data/Models/QualificationModels/CreateQualificationModel.dart';
 import '../../../../Presentation/Bloc/QualificationBloc/qualification_bloc.dart';
 import '../../../../Presentation/Bloc/SetUpProfileBloc/set_up_profile_bloc.dart';
 import '../../../../Presentation/Screens/User/SignUp/SignUp3.dart';
 import '../../../../Presentation/Widgets/MyDropdown.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart'
-//     as dt_picker;
-import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../../../Core/Routes/Routes.dart';
 import '../../../helper/Constants/Constants.dart';
 import '../../../helper/Constants/MyColors.dart';
@@ -227,7 +225,7 @@ class _SignUp2State extends State<SignUp2> {
   }
 
   Widget _appIcon() => MyAppBarWidget(
-        pageNo: '(2 of 3)',
+        pageNo: '(2 of 4)',
         text: "Profile & Backgroung Check",
       );
 
@@ -298,7 +296,10 @@ class _SignUp2State extends State<SignUp2> {
                   child: Container(
                       alignment: Alignment.center,
                       width: 80,
-                      child: const Text('Upload',style: TextStyle(color: kWhiteColor),)),
+                      child: const Text(
+                        'Upload',
+                        style: TextStyle(color: kWhiteColor),
+                      )),
                 ),
               ],
             ),
@@ -478,20 +479,30 @@ class _SignUp2State extends State<SignUp2> {
           hintText: 'Date of Birth',
           readOnly: true,
           onTap: () {
-            // DatePicker.showDatePicker(context,
-            //     theme: const dt_picker.DatePickerTheme(
-            //       containerHeight: 210.0,
-            //     ),
-            //     showTitleActions: true, onConfirm: (date) {
-            //   dateofBirthcontroller.text = dateTimetoDateConverter(date);
-            //   dateOfBirth = date;
-
-            //   setState(() {});
-            // }, currentTime: DateTime.now(), locale: LocaleType.en);
+            BottomPicker.date(
+              pickerTitle: const Text(
+                'Set your Date Of Birth',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: kPrimaryColor,
+                ),
+              ),
+              onSubmit: (time) {
+                dateofBirthcontroller.text = dateTimetoDateConverter(time);
+                setState(() {});
+              },
+              onCloseButtonPressed: () {
+                print('Picker closed');
+              },
+              bottomPickerTheme: BottomPickerTheme.temptingAzure,
+              initialDateTime: DateTime.now(),
+            ).show(context);
           },
           textEditingController: dateofBirthcontroller,
           validator: (val) {},
         );
+
   Widget _procurementYearTextField() => kIsWeb
       ? SizedBox(
           width: getWidth(MediaQuery.of(context).size.width),
@@ -527,16 +538,25 @@ class _SignUp2State extends State<SignUp2> {
           hintText: 'Procurement Year',
           readOnly: true,
           onTap: () {
-            // DatePicker.showDatePicker(context,
-            //     theme: const dt_picker.DatePickerTheme(
-            //       containerHeight: 210.0,
-            //     ),
-            //     showTitleActions: true, onConfirm: (date) {
-            //   procurementYearController.text = dateTimetoDateConverter(date);
-            //   pronouncmentYear = date;
-
-            //   setState(() {});
-            // }, currentTime: DateTime.now(), locale: LocaleType.en);
+            BottomPicker.monthYear(
+              pickerTitle: const Text(
+                'Set your availability',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: kPrimaryColor,
+                ),
+              ),
+              onSubmit: (time) {
+                procurementYearController.text = dateTimetoDateConverter(time);
+                setState(() {});
+              },
+              onCloseButtonPressed: () {
+                print('Picker closed');
+              },
+              bottomPickerTheme: BottomPickerTheme.temptingAzure,
+             initialDateTime: DateTime.now(),
+            ).show(context);
           },
           textEditingController: procurementYearController,
           validator: (val) {},
@@ -618,7 +638,8 @@ class _SignUp2State extends State<SignUp2> {
       buttonText: 'Next');
 
   void _submit() {
-    dateOfBirth = DateTime.now(); pronouncmentYear = DateTime.now();
+    dateOfBirth = DateTime.now();
+    pronouncmentYear = DateTime.now();
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 

@@ -1,7 +1,10 @@
 // ignore_for_file: must_be_immutable, file_names
 import 'dart:io';
+import 'package:bottom_picker/bottom_picker.dart';
+import 'package:bottom_picker/resources/arrays.dart';
+import 'package:mended_soluctions/Data/Models/insurance_model/insurance_model.dart';
+
 import '../../../Data/Models/ProfileModels/ServiceProviderProfileModel.dart';
-import '../../../Presentation/Widgets/EditSpecialities.dart';
 import '../../../Presentation/Widgets/EditTherapyType.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +14,6 @@ import '../../Bloc/GetProfileBloc/get_profile_bloc.dart';
 import '../../Bloc/SetUpProfileBloc/set_up_profile_bloc.dart';
 import '../../helper/Constants/Constants.dart';
 import '../../helper/Constants/MyColors.dart';
-import '../../helper/Constants/MyIcons.dart';
 import '../../helper/Constants/MySpaces.dart';
 import '../../../Data/Models/LicenseModels/AddServiceProviderLicense.dart';
 import '../../../Data/Models/LicenseModels/GetLicenseTypeModel.dart';
@@ -21,10 +23,18 @@ import '../../Widgets/MyAppBar.dart';
 import '../../Widgets/MyButton.dart';
 import '../../Widgets/MyDropdownWithNoLogo.dart';
 import '../../Widgets/MyTextFieldWithNoLogo.dart';
+import '../../helper/ReusedFunctions.dart';
+import '../../helper/enums/insurance_type.dart';
+import 'widgets/pick_image_widget.dart';
 
 class EditProfile extends StatefulWidget {
-  EditProfile({super.key, required this.serviceProviderProfileModel});
+  EditProfile({
+    super.key,
+    required this.serviceProviderProfileModel,
+    required this.insuranceModel,
+  });
   ServiceProviderProfileModel serviceProviderProfileModel;
+  InsuranceModel insuranceModel;
   @override
   State<EditProfile> createState() => _EditProfileState();
 }
@@ -50,6 +60,16 @@ class _EditProfileState extends State<EditProfile> {
 
   final licenseExpiryDateNode = FocusNode();
 
+  final _insuranceTypeController = TextEditingController();
+  final _coverageDetailsController = TextEditingController();
+  final _startDateController = TextEditingController();
+  final _expiryDateController = TextEditingController();
+  final _insuranceProviderNameController = TextEditingController();
+  final _policyNumberController = TextEditingController();
+  final _coverageLimitController = TextEditingController();
+  final _deductibleController = TextEditingController();
+  InsuranceTypes? insuranceType;
+
   GetLicenseTypeModel? getLicenseTypeModel;
   @override
   void initState() {
@@ -62,6 +82,20 @@ class _EditProfileState extends State<EditProfile> {
 
     licenseExpiryDateController.text =
         widget.serviceProviderProfileModel.serviceProviderLicense!.expiryDate!;
+    _insuranceTypeController.text =
+        widget.insuranceModel.insuranceType?.toString() ?? '';
+    _coverageDetailsController.text =
+        widget.insuranceModel.coverageDetails ?? '';
+    _startDateController.text = widget.insuranceModel.startDate ?? '';
+    _expiryDateController.text = widget.insuranceModel.expiryDate ?? '';
+    _insuranceProviderNameController.text =
+        widget.insuranceModel.insuranceProviderName ?? '';
+    _policyNumberController.text = widget.insuranceModel.policyNumber ?? '';
+    _coverageLimitController.text =
+        widget.insuranceModel.coverageLimit?.toString() ?? '';
+    _deductibleController.text =
+        widget.insuranceModel.deductible?.toString() ?? '';
+
     super.initState();
   }
 
@@ -152,7 +186,8 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AddServiceProviderLicenseBloc, AddServiceProviderLicenseStateBase>(
+    return BlocListener<AddServiceProviderLicenseBloc,
+        AddServiceProviderLicenseStateBase>(
       listener: (context, state) {
         if (state is AddServiceProviderLicenseSuccess) {
           Navigator.pop(context);
@@ -190,9 +225,35 @@ class _EditProfileState extends State<EditProfile> {
               verticalSpacing20,
               _uploadPhotoslicenseText(context),
               verticalSpacing20,
-              _frontImage(widget.serviceProviderProfileModel.serviceProviderLicense!.frontImage!),
+              _frontImage(widget.serviceProviderProfileModel
+                  .serviceProviderLicense!.frontImage!),
               verticalSpacing20,
-              _backImage(widget.serviceProviderProfileModel.serviceProviderLicense!.backImage!),
+              _backImage(widget.serviceProviderProfileModel
+                  .serviceProviderLicense!.backImage!),
+              verticalSpacing20,
+              _buildInsuranceTypeDropDown(),
+              _buildTextField(_coverageDetailsController, 'Coverage Details',
+                  TextInputType.multiline),
+              _buildTextField(
+                _startDateController,
+                'Start Date',
+                TextInputType.datetime,
+                readOnly: true,
+              ),
+              _buildTextField(
+                _expiryDateController,
+                'Expiry Date',
+                TextInputType.datetime,
+                readOnly: true,
+              ),
+              _buildTextField(_insuranceProviderNameController,
+                  'Insurance Provider Name', TextInputType.name),
+              _buildTextField(_policyNumberController, 'Policy Number',
+                  TextInputType.number),
+              _buildTextField(_coverageLimitController, 'Coverage Limit',
+                  TextInputType.number),
+              _buildTextField(
+                  _deductibleController, 'Deductible', TextInputType.number),
               verticalSpacing20,
               verticalSpacing20,
               _signUpButton(context),
@@ -200,6 +261,76 @@ class _EditProfileState extends State<EditProfile> {
             ]),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildInsuranceTypeDropDown() {
+    List<DropdownMenuItem<InsuranceTypes>> insuranceTypeItems =
+        InsuranceTypes.values
+            .map((type) => DropdownMenuItem<InsuranceTypes>(
+                  value: type,
+                  child: Text(getInsuranceTypeString(type.index)),
+                ))
+            .toList();
+
+    return MyDropDownTextFieldwithNoLogo(
+      items: insuranceTypeItems,
+      value: insuranceType,
+      hintText: 'Select Insurance Type',
+      onChanged: (value) {
+        setState(() {
+          insuranceType = value as InsuranceTypes?;
+        });
+      },
+      validator: (value) {
+        if (value == null) {
+          return 'Please select an insurance type';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label,
+      TextInputType? keyboardType,
+      {bool readOnly = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: MyTextFieldWithNoLogo(
+        hintText: label,
+        keyboardType: keyboardType,
+        readOnly: readOnly,
+        textEditingController: controller,
+        validator: (val) {
+          if (val!.isEmpty) {
+            return "Field is Empty!";
+          }
+          return null;
+        },
+        onTap: () {
+          if (readOnly) {
+            BottomPicker.date(
+              pickerTitle: const Text(
+                'License Issue',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: kPrimaryColor,
+                ),
+              ),
+              onSubmit: (time) {
+                controller.text = dateTimetoDateConverter(time);
+                setState(() {});
+              },
+              onCloseButtonPressed: () {
+                print('Picker closed');
+              },
+              bottomPickerTheme: BottomPickerTheme.temptingAzure,
+              initialDateTime: DateTime.now(),
+            ).show(context);
+          }
+        },
       ),
     );
   }
@@ -239,8 +370,8 @@ class _EditProfileState extends State<EditProfile> {
               child: CircleAvatar(
                 radius: 60,
                 backgroundColor: Colors.black12,
-                backgroundImage:
-                    NetworkImage(widget.serviceProviderProfileModel.profilePicture!),
+                backgroundImage: NetworkImage(
+                    widget.serviceProviderProfileModel.profilePicture!),
                 //image == null
                 // ? byDefaultImage
                 // : Container(
@@ -276,7 +407,10 @@ class _EditProfileState extends State<EditProfile> {
               child: Container(
                   alignment: Alignment.center,
                   width: 80,
-                  child: const Text('Upload',style: TextStyle(color: kWhiteColor),)),
+                  child: const Text(
+                    'Upload',
+                    style: TextStyle(color: kWhiteColor),
+                  )),
             ),
           ],
         ),
@@ -336,8 +470,9 @@ class _EditProfileState extends State<EditProfile> {
   //       }).toList(),
   //     );
 
-  Widget _licenseTypeTextBox() =>
-      BlocBuilder<GetServiceProviderLicenseTypesBloc, GetServiceProviderLicenseTypesState>(
+  Widget _licenseTypeTextBox() => BlocBuilder<
+          GetServiceProviderLicenseTypesBloc,
+          GetServiceProviderLicenseTypesState>(
         builder: (context, state) {
           if (state is GetServiceProviderLicenseTypesLoading) {
           } else if (state is GetServiceProviderLicenseTypesLoaded) {
@@ -435,9 +570,9 @@ class _EditProfileState extends State<EditProfile> {
 
   Widget _uploadPhotoslicenseText(BuildContext context) => SizedBox(
         width: MediaQuery.of(context).size.width * 0.8,
-        child: Column(
+        child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               Text(
                 'Upload photos of license',
                 style: TextStyle(
@@ -462,6 +597,7 @@ class _EditProfileState extends State<EditProfile> {
         path: path,
         onTap: () => showPickImageBottomSheet(isProfile: false, isback: true),
       );
+
   void _submit() {
     // if (_formKey.currentState!.validate()) {
     //   _formKey.currentState!.save();
@@ -476,7 +612,8 @@ class _EditProfileState extends State<EditProfile> {
           expiryDate: licenseExpiryDateController.text,
           frontImageFile: frontImage,
           licenseTypeId: getLicenseTypeModel?.id ??
-              widget.serviceProviderProfileModel.serviceProviderLicense?.licenseType?.id,
+              widget.serviceProviderProfileModel.serviceProviderLicense
+                  ?.licenseType?.id,
           issueDate: licenseIssueDateController.text,
           number: licenseNumberController.text,
         ),
@@ -495,60 +632,5 @@ class _EditProfileState extends State<EditProfile> {
     // } else {
     //   Get.snackbar("Password mismatch", "Password didnot match");
     // }
-  }
-}
-
-//}
-class PickImageWidget extends StatelessWidget {
-  PickImageWidget({
-    required this.text,
-    required this.onTap,
-    this.image,
-    this.path = "",
-    Key? key,
-  }) : super(key: key);
-  String text;
-  XFile? image;
-  String path;
-
-  Function()? onTap;
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 150,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: Colors.black12,
-          ),
-        ),
-        // ignore: sort_child_properties_last
-        child: image != null
-            ? Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    onError: (exception, stackTrace) => byDefaultImage,
-                    fit: BoxFit.fill,
-                    image: FileImage(
-                      File(image!.path),
-                    ),
-                  ),
-                ),
-              )
-            : Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                      onError: (exception, stackTrace) => byDefaultImage,
-                      fit: BoxFit.fill,
-                      image: NetworkImage(path)),
-                ),
-              ),
-        width: Get.width * 0.8,
-      ),
-    );
   }
 }

@@ -1,15 +1,18 @@
 // ignore_for_file: file_names
 // ignore_for_file: must_be_immutable, sort_child_properties_last
 import 'dart:io';
+import 'package:bottom_picker/bottom_picker.dart';
+import 'package:bottom_picker/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mended_soluctions/Presentation/Screens/User/SignUp/SignUp4.dart';
 import '../../../../Data/Models/LicenseModels/AddServiceProviderLicense.dart';
 import '../../../../Presentation/Bloc/AddServiceProviderLicenseBloc/add_serviceProvider_license_bloc.dart';
 import '../../../../Presentation/Bloc/GetServiceProviderLicenseTypeBloc/get_serviceProvider_license_types_bloc.dart';
 import '../../../../Presentation/Screens/AppointmentSchedule/WeekDaysScreen.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../Presentation/Widgets/MyDropdownWithNoLogo.dart';
 import '../../../../Presentation/Widgets/MyTextFieldWithNoLogo.dart';
 import '../../../../Presentation/Widgets/TherapyTypes.dart';
@@ -22,6 +25,7 @@ import '../../../helper/ReusedFunctions.dart';
 import '../../../../Data/Models/LicenseModels/GetLicenseTypeModel.dart';
 import '../../../Widgets/MyAppBarWidget.dart';
 import '../../../Widgets/MyButton.dart';
+
 class SignUp3 extends StatefulWidget {
   static const routeName = 'signup-3';
   const SignUp3({Key? key}) : super(key: key);
@@ -54,6 +58,7 @@ class _SignUp3State extends State<SignUp3> {
 
   XFile? frontImage;
   XFile? backImage;
+  DateTime? licenseIssueDate,licenseExpiryDate;
   @override
   void initState() {
     super.initState();
@@ -102,28 +107,19 @@ class _SignUp3State extends State<SignUp3> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AddServiceProviderLicenseBloc, AddServiceProviderLicenseStateBase>(
+    return BlocListener<AddServiceProviderLicenseBloc,
+        AddServiceProviderLicenseStateBase>(
       listener: (context, state) {
         if (state is AddServiceProviderLicenseLoading) {
           Get.snackbar("Loading...", "Please wait");
         } else if (state is AddServiceProviderLicenseSuccess) {
           // BlocProvider.of<GetProfileBloc>(context).add(GetServiceProviderProfileEvent());
           if (kIsWeb) {
-            Future.delayed(
-                const Duration(seconds: 3),
-                () => navigatorPushAndRemoveUntil(
-                    context,
-                    WeekDayScreen(
-                      isNew: true,
-                    )));
+            Future.delayed(const Duration(seconds: 3),
+                () => navigatorPushAndRemoveUntil(context, SignUp4()));
           } else {
-            Future.delayed(
-                const Duration(seconds: 3),
-                () => navigatorPushAndRemoveUntil(
-                    context,
-                    WeekDayScreen(
-                      isNew: true,
-                    )));
+            Future.delayed(const Duration(seconds: 3),
+                () => navigatorPushAndRemoveUntil(context, SignUp4()));
           }
         } else if (state is AddServiceProviderLicenseError) {
           Get.snackbar("Opps!", 'Error');
@@ -161,8 +157,6 @@ class _SignUp3State extends State<SignUp3> {
                           verticalSpacing10,
                           _licenseNumberTextField(),
                           verticalSpacing10,
-                          // _licenseStatusTextBox(),
-                          // verticalSpacing10,
                           _licenseIssueTextField(),
                           verticalSpacing20,
                           _uploadPhotoslicenseText(context),
@@ -187,7 +181,7 @@ class _SignUp3State extends State<SignUp3> {
   }
 
   Widget _appIcon() => MyAppBarWidget(
-        pageNo: '(3 of 3)',
+        pageNo: '(3 of 4)',
         text: "Education & Specialties Check",
       );
 
@@ -211,63 +205,6 @@ class _SignUp3State extends State<SignUp3> {
         ),
       );
 
-  // Widget _specialitiesTextBox() => Container(
-  //       width: getWidth(MediaQuery.of(context).size.width),
-  //       height: 50,
-  //       decoration: BoxDecoration(
-  //         borderRadius: BorderRadius.circular(10),
-  //         color: Colors.black12,
-  //       ),
-  //       alignment: Alignment.center,
-  //       child: ListTile(
-  //         onTap: () => Get.bottomSheet(const ServiceProviderSpecialities()),
-  //         leading: const Icon(Icons.done_outline_sharp),
-  //         title: const Text(
-  //           'Add Specialities',
-  //         ),
-  //         trailing: const Icon(Icons.arrow_drop_down_sharp),
-  //       ),
-  //     );
-
-  //  MyDropDownTextField(
-  //       hintText:
-  //       onTap: () => Get.bottomSheet(ServiceProviderSpecialities()),
-  //       value: dropdownvalue,
-  //       icon: ,
-  //       validator: (val) {},
-  //       onChanged: (newValue) {
-  //         setState(() {
-  //           dropdownvalue = newValue.toString();
-  //         });
-  //       },
-  //       items: items.map((String items) {
-  //         return DropdownMenuItem(
-  //           value: items,
-  //           child: Text(items),
-  //         );
-  //       }).toList(),
-  //     );
-
-  // Widget _languagesTextBox() => MyDropDownTextField(
-  //       hintText: 'Proficient Languages',
-  //       value: dropdownvalue,
-  //       icon: Icons.language,
-  //       validator: (val) {
-  //         return null;
-  //       },
-  //       onChanged: (newValue) {
-  //         setState(() {
-  //           dropdownvalue = newValue.toString();
-  //         });
-  //       },
-  //       items: items.map((String items) {
-  //         return DropdownMenuItem(
-  //           value: items,
-  //           child: Text(items),
-  //         );
-  //       }).toList(),
-  //     );
-
   Widget _divider() => SizedBox(
       width: getWidth(MediaQuery.of(context).size.width),
       child: const Divider(color: kBlackColor38));
@@ -279,9 +216,7 @@ class _SignUp3State extends State<SignUp3> {
             children: [
               Text(
                 'License Details',
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               verticalSpacing10,
             ]),
@@ -303,27 +238,9 @@ class _SignUp3State extends State<SignUp3> {
         },
       );
 
-  // Widget _licenseStatusTextBox() => MyDropDownTextFieldwithNoLogo(
-  //       hintText: 'License Status',
-  //       value: dropdownvalue,
-  //       validator: (val) {
-  //         return null;
-  //       },
-  //       onChanged: (newValue) {
-  //         setState(() {
-  //           dropdownvalue = newValue.toString();
-  //         });
-  //       },
-  //       items: items.map((String items) {
-  //         return DropdownMenuItem(
-  //           value: items,
-  //           child: Text(items),
-  //         );
-  //       }).toList(),
-  //     );
-
-  Widget _licenseTypeTextBox() =>
-      BlocBuilder<GetServiceProviderLicenseTypesBloc, GetServiceProviderLicenseTypesState>(
+  Widget _licenseTypeTextBox() => BlocBuilder<
+          GetServiceProviderLicenseTypesBloc,
+          GetServiceProviderLicenseTypesState>(
         builder: (context, state) {
           if (state is GetServiceProviderLicenseTypesLoading) {
           } else if (state is GetServiceProviderLicenseTypesLoaded) {
@@ -386,7 +303,31 @@ class _SignUp3State extends State<SignUp3> {
                 onFieldSubmitted: (val) =>
                     FocusScope.of(context).requestFocus(licenseExpiryDateNode),
                 textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.emailAddress,
+                // readOnly: true,
+                // onTap: () {
+                //   BottomPicker.date(
+                //     pickerTitle: const Text(
+                //       'License Issue',
+                //       style: TextStyle(
+                //         fontWeight: FontWeight.bold,
+                //         fontSize: 15,
+                //         color: kPrimaryColor,
+                //       ),
+                //     ),
+                //     onSubmit: (time) {
+                //       licenseIssueDateController.text =
+                //           dateTimetoDateConverter(time, format: 'dd-MM-yyyy');
+                      
+                //       licenseIssueDate = time;
+                //       setState(() {});
+                //     },
+                //     onCloseButtonPressed: () {
+                //       print('Picker closed');
+                //     },
+                //     bottomPickerTheme: BottomPickerTheme.temptingAzure,
+                //     initialDateTime: DateTime.now(),
+                //   ).show(context);
+                // },
                 validator: (val) {
                   if (val!.isEmpty) {
                     return "Field is Empty!";
@@ -403,6 +344,31 @@ class _SignUp3State extends State<SignUp3> {
                 focusNode: licenseExpiryDateNode,
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.emailAddress,
+                // readOnly: true,
+                // onTap: () {
+                //   BottomPicker.date(
+                //     pickerTitle: const Text(
+                //       'License Expiry',
+                //       style: TextStyle(
+                //         fontWeight: FontWeight.bold,
+                //         fontSize: 15,
+                //         color: kPrimaryColor,
+                //       ),
+                //     ),
+                //     onSubmit: (time) {
+                //       licenseExpiryDateController.text =
+                //           dateTimetoDateConverter(time, format: 'dd-MM-yyyy');
+                      
+                //       licenseExpiryDate = time;
+                //       setState(() {});
+                //     },
+                //     onCloseButtonPressed: () {
+                //       print('Picker closed');
+                //     },
+                //     bottomPickerTheme: BottomPickerTheme.temptingAzure,
+                //     initialDateTime: DateTime.now(),
+                //   ).show(context);
+                // },
                 validator: (val) {
                   if (val!.isEmpty) {
                     return "Field is Empty!";

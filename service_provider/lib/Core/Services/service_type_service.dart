@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart';
 import 'package:mended_soluctions/Core/Repo/Api/service_type_repo.dart';
-import 'package:mended_soluctions/Data/service_type/service_type_model.dart';
+import 'package:mended_soluctions/Data/Models/service_type/service_type_model.dart';
 import '../../Data/Models/SharedModels/ErrorModel.dart';
 
 class ServiceTypeService {

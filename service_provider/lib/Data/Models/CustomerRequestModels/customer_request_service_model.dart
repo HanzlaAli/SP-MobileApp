@@ -1,4 +1,5 @@
 import '../../../Presentation/helper/Constants/Constants.dart';
+import '../../../Presentation/helper/ReusedFunctions.dart';
 
 class CustomerRequestServiceModel {
   String? title;
@@ -9,22 +10,23 @@ class CustomerRequestServiceModel {
   User? user;
   int? id;
 
-  CustomerRequestServiceModel(
-      {this.title,
-      this.serviceType,
-      this.description,
-      this.images,
-      this.budget,
-      this.user,
-      this.id});
+  CustomerRequestServiceModel({
+    this.title,
+    this.serviceType,
+    this.description,
+    this.images,
+    this.budget,
+    this.user,
+    this.id,
+  });
 
   CustomerRequestServiceModel.fromJson(Map<String, dynamic> json) {
     title = json['title'];
     serviceType = json['serviceType'] != null
-        ? new ServiceType.fromJson(json['serviceType'])
+        ? ServiceType.fromJson(json['serviceType'])
         : null;
     description = json['description'];
-    images = _getImages(json['images'].toString());
+    images = getImages(json['images'].toString());
     budget = json['budget'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     id = json['id'];
@@ -67,9 +69,4 @@ class User {
     profilePicture = baseUrl + json['profilePicture'];
     id = json['id'];
   }
-}
-
-List<String> _getImages(String image) {
-  var images = image.split(';').map((img) => '$baseUrl$img').toList();
-  return images;
 }

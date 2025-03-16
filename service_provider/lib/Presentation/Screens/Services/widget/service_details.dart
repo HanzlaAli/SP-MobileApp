@@ -1,19 +1,19 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_nerdzlab/carousel_nerdzlab.dart';
+// ignore_for_file: must_be_immutable, library_private_types_in_public_api, file_names
+import 'dart:ui';
+import '../../../Widgets/MyAppBar.dart';
+import '../../../helper/ReusedFunctions.dart';
 import 'package:flutter/material.dart';
+import '../../../helper/Constants/MyColors.dart';
+import '../../../helper/Constants/MySpaces.dart';
+import '../../../../Data/Models/ServicesModels/GetServiceModel.dart';
+import 'package:carousel_nerdzlab/carousel_nerdzlab.dart';
 import 'package:mended_soluctions/Presentation/Widgets/MyButton.dart';
 import 'package:mended_soluctions/Presentation/Widgets/my_network_images.dart';
-import 'package:mended_soluctions/Presentation/helper/Constants/MySpaces.dart';
-import '../../../Data/Models/CustomerRequestModels/customer_request_service_model.dart';
-import '../../Widgets/MyAppBar.dart';
-import '../../helper/Constants/MyColors.dart';
-import '../../helper/ReusedFunctions.dart';
-import 'widgets/customer_request_list_items.dart';
 
-class CustomerRequestDetailScreen extends StatelessWidget {
-  final CustomerRequestServiceModel model;
+class ServiceDetail extends StatelessWidget {
+  final GetServicesModel model;
 
-  const CustomerRequestDetailScreen({
+  const ServiceDetail({
     super.key,
     required this.model,
   });
@@ -68,28 +68,45 @@ class CustomerRequestDetailScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Text(
-                            '${model.title}',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: kBlackColor,
-                                fontSize: 20),
-                          ),
-                          Text(
-                            ' - ${model.budget}\$',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: kBlackColor38,
-                                fontSize: 15),
-                          ),
-                        ],
+                      Text(
+                        '${model.name}',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: kBlackColor,
+                            fontSize: 20),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.chat_bubble_rounded),
-                        color: kSecondaryColor,
-                        onPressed: () {},
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Row(
+                          spacing: 5,
+                          children: [
+                            Text(
+                              '\$ ${model.charges}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            if ((model.discount ?? 0) > 0) ...[
+                              Text(
+                                '\$ ${model.charges}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: kBlackColor45,
+                                  decoration: TextDecoration.lineThrough,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              Text(
+                                '\$ ${(model.charges! - model.discount!).toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -121,11 +138,6 @@ class CustomerRequestDetailScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const CustomerServiceDetails(
-                        text: '4.9',
-                        icon: Icons.star,
-                        iconColor: kYellowColor,
-                      ),
                     ],
                   ),
                   verticalSpacing10,
@@ -137,19 +149,6 @@ class CustomerRequestDetailScreen extends StatelessWidget {
             )
           ],
         ),
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          MyButton(
-            onPressed: () {},
-            width: MediaQuery.of(context).size.width * 0.8,
-            bgColor: kPrimaryColor,
-            fontColor: kWhiteColor,
-            buttonText: 'Book Now',
-          ),
-        ],
       ),
     );
   }
@@ -169,15 +168,15 @@ class CustomerRequestDetailScreen extends StatelessWidget {
             children: [
               _buildCustomerDetailsRow(
                 'Name',
-                '${model.user?.firstName} ${model.user?.lastName}',
+                '${model.serviceProvider?.firstName} ${model.serviceProvider?.lastName}',
               ),
               _buildPhoneNoRow(
                 'Phone',
-                '${model.user?.phoneNumber}',
+                '${model.serviceProvider?.phoneNumber}',
               ),
               _buildCustomerDetailsRow(
                 'Email',
-                '${model.user?.email}',
+                '${model.serviceProvider?.email}',
               ),
             ],
           ),
