@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart';
-import '../../Core/Repo/Api/TherapyTypeRepo.dart';
 import '../../Data/Models/TherapyType/TherapyTypeModel.dart';
 import '../../Data/Models/SharedModels/ErrorModel.dart';
+import '../Repo/Api/therpy_type_repo.dart';
 
 class TherapyTypeService {
   TherapyTypeRepo repo = TherapyTypeRepo();
